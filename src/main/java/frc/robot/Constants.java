@@ -13,9 +13,25 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double LEFTX_DEADBAND = 0.2;
     public static final double LEFTY_DEADBAND = 0.2;
+  }
+
+  public static class IntakeConstants {
+    public static final int PIVOT_MOTOR_PORT = 9;
+    public static final int ROLLER_MOTOR_PORT = 15;
+    public static final double PIVOT_SHOOT = 0.25;
+    public static final double AMP_SHOOT_POWER = 0.52;
+    public static final double ROLLER_POWER = 0.25;
+  }
+
+  public static class ShooterConstant {
+    public static final int ROLLER_MOTOR1_PORT= 16;
+    public static final int ROLLER_MOTOR2_PORT= 17;
+    public static final int PIVOT_MOTOR1_PORT= 18;
+    public static final int PIVOT_MOTOR2_PORT= 19;
   }
 }

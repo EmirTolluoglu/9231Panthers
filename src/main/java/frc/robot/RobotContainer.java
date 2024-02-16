@@ -7,7 +7,10 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.Intake.IntakePivot;
+import frc.robot.commands.Intake.IntakeRoller;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 import java.io.File;
 
@@ -34,10 +37,8 @@ public class RobotContainer {
   
   XboxController driverXbox = new XboxController(0);
 
-  private CANSparkMax PivotMotor;
-
   private final SwerveSubsystem driveSubsystem ;
-  
+  private final ShooterSubsystem shooterSubsystem;
   
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -49,8 +50,8 @@ public class RobotContainer {
 
     driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
+    shooterSubsystem=ShooterSubsystem.getInstance();
     
-    PivotMotor= new CANSparkMax(15,MotorType.kBrushless);
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand(
       () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFTY_DEADBAND),
       () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFTX_DEADBAND),
@@ -73,15 +74,18 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    //new Trigger(m_exampleSubsystem::exampleCondition)
-    //    .onTrue(new ExampleCommand(m_exampleSubsystem));
+  private void configureBindings() 
+  {
+    driverController.a().onTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_SHOOT))
+                        .onFalse(new IntakePivot(0));
+    driverController.b().onTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_SHOOT))
+                        .onFalse(new IntakePivot(0));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+    driverController.x().onTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER))
+                        .onFalse(new IntakePivot(0));
+    driverController.y().onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
+                        .onFalse(new IntakePivot(0));
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

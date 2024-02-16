@@ -23,6 +23,8 @@ public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
   SwerveDrive swerveDrive;
+  private static SwerveSubsystem instance;
+
 
   public SwerveSubsystem(File directory) 
   {
@@ -34,7 +36,7 @@ public class SwerveSubsystem extends SubsystemBase {
     {
       throw new RuntimeException(e);
     }  
-
+    instance=this;
     
   }
 
@@ -94,6 +96,11 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public SwerveSubsystem getInstance()
+  {
+      return instance;
   }
 
   public SwerveController getSwerveController(){
