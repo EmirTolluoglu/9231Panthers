@@ -1,9 +1,7 @@
 package frc.robot.commands.Intake;
 
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 
 public class IntakePivot extends Command 
