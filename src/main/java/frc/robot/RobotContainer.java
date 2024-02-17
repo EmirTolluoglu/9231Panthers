@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -53,8 +54,8 @@ public class RobotContainer {
     shooterSubsystem=ShooterSubsystem.getInstance();
     
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand(
-      () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFTY_DEADBAND),
-      () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFTX_DEADBAND),
+      () -> MathUtil.applyDeadband(driverController.getLeftY()*0.75, OperatorConstants.LEFTY_DEADBAND),
+      () -> MathUtil.applyDeadband(driverController.getLeftX()*0.75, OperatorConstants.LEFTX_DEADBAND),
       () ->  driverController.getRightX(),
       () -> -driverController.getRightY());
 
@@ -76,15 +77,18 @@ public class RobotContainer {
    */
   private void configureBindings() 
   {
-    driverController.a().onTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_SHOOT))
-                        .onFalse(new IntakePivot(0));
-    driverController.b().onTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_SHOOT))
-                        .onFalse(new IntakePivot(0));
+    new JoystickButton(driverXbox, 2)
+        .whileTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER));
+    new JoystickButton(driverXbox, 3)
+        .whileTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
 
-    driverController.x().onTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER))
-                        .onFalse(new IntakePivot(0));
-    driverController.y().onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
-                        .onFalse(new IntakePivot(0));
+    new JoystickButton(driverXbox, 4)
+        .whileTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_SHOOT));
+    new JoystickButton(driverXbox, 1)
+        .whileTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_SHOOT));
+
+    
+    
 }
 
   /**

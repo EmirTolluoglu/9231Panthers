@@ -59,8 +59,8 @@ public class SwerveSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("sa", 343);
     return run(() -> {
-      double xInput = Math.pow(translationX.getAsDouble(), 3); // Smooth controll out
-      double yInput = Math.pow(translationY.getAsDouble(), 3); // Smooth controll out
+      double xInput = Math.pow(translationX.getAsDouble(), 1); // Smooth controll out
+      double yInput = Math.pow(translationY.getAsDouble(), 1); // Smooth controll out
       // Make the robot move
       driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(xInput, yInput,
                                                                       headingX.getAsDouble(),

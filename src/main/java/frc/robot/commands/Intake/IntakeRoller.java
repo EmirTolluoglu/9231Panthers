@@ -19,12 +19,12 @@ public class IntakeRoller extends Command
     @Override
     public void execute()
     {
-        intakeSubsystem.setPivotMotor(speed);
+        intakeSubsystem.setRollerMotor(speed);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        intakeSubsystem.setPivotMotor(0);
+        intakeSubsystem.setRollerMotor(0);
     }
 }

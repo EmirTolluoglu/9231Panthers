@@ -31,7 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotEncoder = pivotMotor.getEncoder();
     }
 
-    public void setRollerMotorPower(double forward) {
+    public void setRollerMotor(double forward) {
         SmartDashboard.putNumber("Intake Potencia (%)", forward * 100.0);
         rollerMotor.set(forward);
     }
