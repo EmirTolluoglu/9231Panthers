@@ -28,8 +28,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
         PivotMotor1.restoreFactoryDefaults();
         PivotMotor2.restoreFactoryDefaults();
-        PivotMotor1.restoreFactoryDefaults();        
-        PivotMotor2.restoreFactoryDefaults();
+        RollerMotor1.restoreFactoryDefaults();        
+        RollerMotor2.restoreFactoryDefaults();
         
         PivotMotor1.setIdleMode(IdleMode.kBrake);        
         PivotMotor2.setIdleMode(IdleMode.kBrake);
