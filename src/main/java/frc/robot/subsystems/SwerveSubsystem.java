@@ -4,15 +4,11 @@
 
 package frc.robot.subsystems;
 
-import java.io.Console;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import swervelib.SwerveController;
@@ -46,7 +42,6 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return a command
    */
   public Command exampleMethodCommand() {
-    
     return runOnce(
         () -> {
           
@@ -56,9 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX,
                               DoubleSupplier headingY)
   {
-    
-    SmartDashboard.putNumber("sa", 343);
-    return run(() -> {
+        return run(() -> {
       double xInput = Math.pow(translationX.getAsDouble(), 1); // Smooth controll out
       double yInput = Math.pow(translationY.getAsDouble(), 1); // Smooth controll out
       // Make the robot move
