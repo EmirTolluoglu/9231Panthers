@@ -8,6 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
+import frc.robot.commands.Shooter.ShooterPivot;
+import frc.robot.commands.Shooter.ShooterRoller;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -76,11 +78,17 @@ public class RobotContainer {
         .whileTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
 
     new JoystickButton(driverXbox, 4)
-        .whileTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_SHOOT));
+        .whileTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_POWER));
     new JoystickButton(driverXbox, 1)
-        .whileTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_SHOOT));
+        .whileTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_POWER));
 
-    
+    new JoystickButton(driverXbox, 6)
+        .whileTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER));
+    new JoystickButton(driverXbox, 5)
+        .whileTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER));
+
+    new JoystickButton(driverXbox, 7)
+        .whileTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
     
 }
 

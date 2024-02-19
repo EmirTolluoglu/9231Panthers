@@ -13,6 +13,7 @@ public class IntakePivot extends Command
     {
         intakeSubsystem=IntakeSubsystem.getInstance();
         this.speed=speed;
+        addRequirements(intakeSubsystem);
     }
 
     @Override

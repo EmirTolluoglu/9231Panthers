@@ -12,6 +12,7 @@ public class ShooterRoller extends Command
     {
         this.speed=speed;
         shooterSubsystem= ShooterSubsystem.getInstance();
+        addRequirements(shooterSubsystem);
     }
     
     @Override
@@ -24,5 +25,6 @@ public class ShooterRoller extends Command
     public void end(boolean interrupted)
     {
         shooterSubsystem.setRollerMotor(0);
+        
     }
 }

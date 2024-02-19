@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,7 +29,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         rollerMotor.setIdleMode(IdleMode.kBrake);
 
-        pivotEncoder = pivotMotor.getEncoder();
+        pivotEncoder = pivotMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature,IntakeConstants.kCPR);
     }
 
     public void setRollerMotor(double forward) {
@@ -39,6 +40,22 @@ public class IntakeSubsystem extends SubsystemBase {
     public void setPivotMotor(double forward) {
         SmartDashboard.putNumber("Intake Degree (%)", forward * 100.0);
         pivotMotor.set(forward);
+    }
+
+    public double getPivotEncoder()
+    {
+        return pivotEncoder.getPosition();
+    }
+
+    public void resetPivotEncoder()
+    {
+        pivotEncoder.setPosition(0);
+    }
+
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Bore Encoder", getPivotEncoder());
     }
 
     public static IntakeSubsystem getInstance()

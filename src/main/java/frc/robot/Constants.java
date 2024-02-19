@@ -23,15 +23,18 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int PIVOT_MOTOR_PORT = 9;
     public static final int ROLLER_MOTOR_PORT = 15;
-    public static final double PIVOT_SHOOT = 0.5;
+    public static final double PIVOT_POWER = 0.5;
     public static final double AMP_SHOOT_POWER = 0.52;
     public static final double ROLLER_POWER = 0.2;
+    public static final int kCPR=8192;
   }
 
   public static class ShooterConstant {
-    public static final int ROLLER_MOTOR1_PORT= 16;
-    public static final int ROLLER_MOTOR2_PORT= 17;
-    public static final int PIVOT_MOTOR1_PORT= 18;
-    public static final int PIVOT_MOTOR2_PORT= 19;
+    public static final int ROLLER_MOTOR1_PORT= 18;
+    public static final int ROLLER_MOTOR2_PORT= 19;
+    public static final int PIVOT_MOTOR1_PORT= 16;
+    public static final int PIVOT_MOTOR2_PORT= 17;
+    public static final double PIVOT_POWER=0.5;
+    public static final double ROLLER_POWER=1;
   }
 }

@@ -25,7 +25,20 @@
       }
     }
   },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Motors": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
   "NetworkTables Info": {
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

@@ -12,6 +12,7 @@ public class ShooterPivot extends Command
     {
         m_shooter=ShooterSubsystem.getInstance();
         this.speed=speed;
+        addRequirements(m_shooter);
     }
 
     @Override
