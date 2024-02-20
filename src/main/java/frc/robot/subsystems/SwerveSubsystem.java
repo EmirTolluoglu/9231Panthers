@@ -7,12 +7,16 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
+import com.ctre.phoenix6.hardware.CANcoder;
 import swervelib.parser.SwerveParser;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -63,6 +67,19 @@ public class SwerveSubsystem extends SubsystemBase {
     });
   }
 
+  public Command driveCommand2(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
+  {
+    return run(() -> {
+      // Make the robot move
+      SmartDashboard.putNumber("Joystick", angularRotationX.getAsDouble());
+      swerveDrive.drive(new Translation2d(-translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
+                                          -translationY.getAsDouble() * swerveDrive.getMaximumVelocity()),
+                        angularRotationX.getAsDouble() * swerveDrive.getMaximumAngularVelocity(),
+                        true,
+                        false);
+    });
+  }
+
   public void drive(Translation2d translation, double rotation, boolean fieldRelative)
   {
     swerveDrive.drive(translation,
@@ -81,8 +98,8 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void periodic() 
+  {
     
   }
 

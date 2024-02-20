@@ -48,11 +48,10 @@ public class RobotContainer {
                                                                          "swerve"));
     shooterSubsystem=ShooterSubsystem.getInstance();
     
-    Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand(
+    Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand2(
       () -> MathUtil.applyDeadband(driverController.getLeftY()*0.75, OperatorConstants.LEFTY_DEADBAND),
       () -> MathUtil.applyDeadband(driverController.getLeftX()*0.75, OperatorConstants.LEFTX_DEADBAND),
-      () ->  driverController.getRightX(),
-      () -> -driverController.getRightY());
+      () ->  driverController.getRightX());
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
     
