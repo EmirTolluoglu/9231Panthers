@@ -12,6 +12,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,9 +29,10 @@ public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
   SwerveDrive swerveDrive;
-  private static SwerveSubsystem instance;
+  private static SwerveSubsystem INSTANCE = null;
 
 
+  
   public SwerveSubsystem(File directory) 
   {
     try
@@ -41,9 +43,11 @@ public class SwerveSubsystem extends SubsystemBase {
     {
       throw new RuntimeException(e);
     }  
-    instance=this;
+    INSTANCE=this;
     
   }
+  
+
 
   /**
    * Example command factory method.
@@ -113,9 +117,12 @@ public class SwerveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public SwerveSubsystem getInstance()
-  {
-      return instance;
+ public static SwerveSubsystem getInstance() {
+    if (INSTANCE == null)
+    {
+      INSTANCE = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+    }
+    return INSTANCE;
   }
 
   public SwerveController getSwerveController(){
