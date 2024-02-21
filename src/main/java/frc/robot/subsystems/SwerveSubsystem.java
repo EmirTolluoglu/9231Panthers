@@ -1,13 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
 
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
-//import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -19,14 +15,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkMax;
 
 import swervelib.parser.SwerveParser;
 
 public class SwerveSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
 
   SwerveDrive swerveDrive;
   private static SwerveSubsystem INSTANCE = null;
@@ -96,15 +88,7 @@ public class SwerveSubsystem extends SubsystemBase {
                       fieldRelative,
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
+
 
   @Override
   public void periodic() 
@@ -120,7 +104,7 @@ public class SwerveSubsystem extends SubsystemBase {
  public static SwerveSubsystem getInstance() {
     if (INSTANCE == null)
     {
-      INSTANCE = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+      INSTANCE = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
     }
     return INSTANCE;
   }
