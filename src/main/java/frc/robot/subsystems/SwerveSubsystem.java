@@ -7,20 +7,27 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
+
 //import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.util.Units;
 
 import swervelib.parser.SwerveParser;
 
@@ -43,13 +50,27 @@ public class SwerveSubsystem extends SubsystemBase {
     }  
     instance=this;
     
+        AutoBuilder.configureHolonomic(
+            this::getPose,
+            this::resetOdometry,
+            this::getRobotOrientedVelocity,
+            this::setChassisSpeed,
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(Constants.kSwerveAutoPIDP, Constants.kSwerveAutoPIDI, Constants.kSwerveAutoPIDD),
+                new PIDConstants(
+                    swerveDrive.swerveController.config.headingPIDF.p,
+                    swerveDrive.swerveController.config.headingPIDF.i,
+                    swerveDrive.swerveController.config.headingPIDF.d),
+                Constants.kMaxModuleSpeed,
+                Units.feetToMeters(Constants.kDriveBaseRadius),
+                new ReplanningConfig()
+            ),
+            this::shouldPathFlip,
+            this
+        );
+
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
   public Command exampleMethodCommand() {
     return runOnce(
         () -> {
@@ -92,15 +113,31 @@ public class SwerveSubsystem extends SubsystemBase {
                       fieldRelative,
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+ 
+  
+
+   public void resetOdometry(Pose2d pose){
+        swerveDrive.resetOdometry(pose);
+    }
+
+    public Pose2d getPose(){
+        return swerveDrive.getPose();
+    }
+
+    public void setChassisSpeed(ChassisSpeeds velocity){
+        swerveDrive.setChassisSpeeds(velocity);
+    }
+    public ChassisSpeeds getRobotOrientedVelocity(){
+      return swerveDrive.getRobotVelocity();
   }
+    public boolean shouldPathFlip(){
+        var alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+    }
 
   @Override
   public void periodic() 
