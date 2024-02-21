@@ -51,7 +51,7 @@ public class RobotContainer {
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand2(
       () -> MathUtil.applyDeadband(driverController.getLeftY()*0.75, OperatorConstants.LEFTY_DEADBAND),
       () -> MathUtil.applyDeadband(driverController.getLeftX()*0.75, OperatorConstants.LEFTX_DEADBAND),
-      () ->  driverController.getRightX());
+      () ->  MathUtil.applyDeadband(driverController.getRawAxis(2), OperatorConstants.RIGHTX_DEADBAND));
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
     

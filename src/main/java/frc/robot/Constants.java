@@ -18,6 +18,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final double LEFTX_DEADBAND = 0.2;
     public static final double LEFTY_DEADBAND = 0.2;
+    public static final double RIGHTX_DEADBAND = 0.2;
   }
 
   public static class IntakeConstants {
@@ -35,6 +36,6 @@ public final class Constants {
     public static final int PIVOT_MOTOR1_PORT= 16;
     public static final int PIVOT_MOTOR2_PORT= 17;
     public static final double PIVOT_POWER=0.5;
-    public static final double ROLLER_POWER=0.4;
+    public static final double ROLLER_POWER=1;
   }
 }
