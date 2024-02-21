@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve;
 
 import java.util.function.DoubleSupplier;
 
@@ -15,12 +15,12 @@ public class DriveCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
 
-  private final SwerveSubsystem  swerve;
+  private final Swerve  swerve;
   private final DoubleSupplier   vX;
   private final DoubleSupplier   vY;
   private final DoubleSupplier   headingAdjust;
   
-  public DriveCommand(SwerveSubsystem swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier headingAdjust) {
+  public DriveCommand(Swerve swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier headingAdjust) {
   this.swerve = swerve;
   this.vX = vX;
   this.vY = vY;

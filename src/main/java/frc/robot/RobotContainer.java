@@ -5,100 +5,60 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
 import frc.robot.commands.Shooter.ShooterPivot;
 import frc.robot.commands.Shooter.ShooterRoller;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.DriverControls;
 import frc.robot.subsystems.ShooterSubsystem;
 
-import java.io.File;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.XboxController;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Swerve.FieldOrientedDrive;
+import frc.robot.commands.Swerve.LockPods;
+import frc.robot.commands.Swerve.ResetGyro;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
   
-  XboxController driverXbox = new XboxController(0);
+public static final Swerve S_SWERVE = new Swerve();
+  public static final DriverControls S_DRIVERCONTROLS = new DriverControls();
 
-  private final SwerveSubsystem driveSubsystem ;
-  private final ShooterSubsystem shooterSubsystem;
-  
-  private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+/*   private final ShooterSubsystem shooterSubsystem;
+ */  
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  private final SendableChooser<Command> autoChooser;
+/*   private final ShooterSubsystem shooterSubsystem;
+ */
   public RobotContainer() 
   {
-    // Configure the trigger bindings
-
-    driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve"));
-    shooterSubsystem=ShooterSubsystem.getInstance();
-    
-    Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand(
-      () -> MathUtil.applyDeadband(driverController.getLeftY()*0.75, OperatorConstants.LEFTY_DEADBAND),
-      () -> MathUtil.applyDeadband(driverController.getLeftX()*0.75, OperatorConstants.LEFTX_DEADBAND),
-      () ->  driverController.getRightX(),
-      () -> -driverController.getRightY());
-
-    driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
-    
     configureBindings();
-    //() -> 
-    //() -> -driverController.getRightY()
+    setDefaultCommands();
+
+    NamedCommands.registerCommand("lockPods", new LockPods(S_SWERVE));
+    NamedCommands.registerCommand("resetGyro", new ResetGyro(S_SWERVE));
+    NamedCommands.registerCommand("mobilityPointDrive", S_SWERVE.autonDriveBackwards(5));
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Mode", autoChooser);
+/*     shooterSubsystem = new ShooterSubsystem(); // Initialize the shooterSubsystem
+ */
+
   }
+  private void setDefaultCommands(){
+        CommandScheduler.getInstance().setDefaultCommand(S_SWERVE, new FieldOrientedDrive(S_SWERVE, S_DRIVERCONTROLS));
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() 
-  {
-    new JoystickButton(driverXbox, 2)
-        .whileTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER));
-    new JoystickButton(driverXbox, 3)
-        .whileTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
+  }
+  private void configureBindings() {
 
-    new JoystickButton(driverXbox, 4)
-        .whileTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_POWER));
-    new JoystickButton(driverXbox, 1)
-        .whileTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_POWER));
-
-    new JoystickButton(driverXbox, 6)
-        .whileTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER));
-    new JoystickButton(driverXbox, 5)
-        .whileTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER));
-
-    new JoystickButton(driverXbox, 7)
-        .whileTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
-    
-}
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  //public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
-  //}
+    S_DRIVERCONTROLS.registerTriggers(S_SWERVE);
+  }
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 }
