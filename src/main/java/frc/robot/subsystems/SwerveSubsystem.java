@@ -8,11 +8,13 @@ import java.io.File;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 //import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 
@@ -42,7 +44,7 @@ public class SwerveSubsystem extends SubsystemBase {
   {
     try
     {
-      swerveDrive = new SwerveParser(directory).createSwerveDrive(1);
+      swerveDrive = new SwerveParser(directory).createSwerveDrive(10);
     } 
     catch (Exception e)
     {
@@ -69,6 +71,24 @@ public class SwerveSubsystem extends SubsystemBase {
             this
         );
 
+  }
+ public Command getAutonomousCommand(String pathName, boolean setOdomToStart)
+  {
+    // Load the path you want to follow using its name in the GUI
+    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+    if (setOdomToStart)
+    {
+      resetOdometry(new Pose2d(path.getPoint(0).position, getHeading()));
+    }
+
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(path);
+  }
+  
+ public Rotation2d getHeading()
+  {
+    return getPose().getRotation();
   }
 
   public Command exampleMethodCommand() {
