@@ -48,6 +48,6 @@ public final class Constants {
     public static final int PIVOT_MOTOR1_PORT= 16;
     public static final int PIVOT_MOTOR2_PORT= 17;
     public static final double PIVOT_POWER=0.5;
-    public static final double ROLLER_POWER=1;
+    public static final double ROLLER_POWER=0.4;
   }
 }
