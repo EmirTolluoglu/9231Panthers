@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -18,6 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
     CANSparkMax pivotMotor = new CANSparkMax(IntakeConstants.PIVOT_MOTOR_PORT, MotorType.kBrushless);
     CANSparkMax rollerMotor = new CANSparkMax(IntakeConstants.ROLLER_MOTOR_PORT, MotorType.kBrushless);
     PIDController pid = new PIDController(kP, kI, kD);
+    DigitalInput boreEncoder ;
     private RelativeEncoder pivotEncoder;
 
     static IntakeSubsystem instance;
@@ -32,6 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         rollerMotor.setIdleMode(IdleMode.kBrake);
 
+        boreEncoder= new DigitalInput(0);
         pivotEncoder = pivotMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature,IntakeConstants.kCPR);
     }
 
@@ -59,6 +62,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic()
     {
         SmartDashboard.putNumber("Bore Encoder", getPivotEncoder());
+        
     }
 
     public static IntakeSubsystem getInstance()

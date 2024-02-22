@@ -50,4 +50,11 @@ public final class Constants {
     public static final double PIVOT_POWER=0.5;
     public static final double ROLLER_POWER=0.4;
   }
+
+  public static class ClimberConstant
+  {
+    public static final int CLIMBER1_PORT=20;
+    public static final int CLIMBER2_PORT=21;
+    public static final double CLIMBER_POWER=0.5;
+  }
 }

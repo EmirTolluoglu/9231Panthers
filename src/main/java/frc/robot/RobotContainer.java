@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
 import frc.robot.commands.Shooter.ShooterPivot;
@@ -92,6 +93,11 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, 7)
         .whileTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
+
+    new JoystickButton(driverXbox, 10)
+        .whileTrue(new ClimberCmd(Constants.ClimberConstant.CLIMBER_POWER));
+    new JoystickButton(driverXbox, 9)
+        .whileTrue(new ClimberCmd(-Constants.ClimberConstant.CLIMBER_POWER));
     
 }
 
