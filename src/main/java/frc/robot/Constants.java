@@ -14,6 +14,18 @@ package frc.robot;
  */
 public final class Constants {
   
+/*   "p": 0.4,
+    "i": 0,
+    "d": 0.01
+ */  
+  public static final double MaxModuleSpeed =1;
+  public static final double driveBaseRadius = 0.51;
+
+ public static class PIDConstants{
+      public static final double kSwerveAutoPIDP = 0.4;
+      public static final double kSwerveAutoPIDI = 0;
+      public static final double kSwerveAutoPIDD = 0.01;
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double LEFTX_DEADBAND = 0.2;

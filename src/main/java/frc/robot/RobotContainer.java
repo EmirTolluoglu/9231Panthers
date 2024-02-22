@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
 import frc.robot.commands.Shooter.ShooterPivot;
@@ -15,9 +14,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -35,6 +38,7 @@ public class RobotContainer {
 
   private final SwerveSubsystem driveSubsystem ;
   private final ShooterSubsystem shooterSubsystem;
+  private final SendableChooser<Command> autoChooser;
   
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -56,8 +60,8 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
     
     configureBindings();
-    //() -> 
-    //() -> -driverController.getRightY()
+    autoChooser = AutoBuilder.buildAutoChooser("Test");
+    SmartDashboard.putData("Auto Mode", autoChooser);
   }
 
   /**
@@ -96,8 +100,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  //public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
-  //}
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 }
