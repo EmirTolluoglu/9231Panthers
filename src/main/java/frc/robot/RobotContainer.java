@@ -17,6 +17,8 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -40,6 +42,8 @@ public class RobotContainer {
   private final SwerveSubsystem driveSubsystem ;
   private final ShooterSubsystem shooterSubsystem;
   private final SendableChooser<Command> autoChooser;
+
+  private UsbCamera cam;
   
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -48,6 +52,8 @@ public class RobotContainer {
   public RobotContainer() 
   {
     // Configure the trigger bindings
+
+    cam=CameraServer.startAutomaticCapture();
 
     driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
