@@ -11,6 +11,7 @@ import frc.robot.commands.Intake.IntakeRoller;
 import frc.robot.commands.Shooter.ShooterPivot;
 import frc.robot.commands.Shooter.ShooterRoller;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -41,9 +43,11 @@ public class RobotContainer {
 
   private final SwerveSubsystem driveSubsystem ;
   private final ShooterSubsystem shooterSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
   private final SendableChooser<Command> autoChooser;
 
   private UsbCamera cam;
+  private UsbCamera cam2;
   
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -53,11 +57,13 @@ public class RobotContainer {
   {
     // Configure the trigger bindings
 
-    cam=CameraServer.startAutomaticCapture();
+    cam=CameraServer.startAutomaticCapture(0);
+    cam2=CameraServer.startAutomaticCapture(1);
 
     driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
     shooterSubsystem=ShooterSubsystem.getInstance();
+    intakeSubsystem=IntakeSubsystem.getInstance();
     
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand2(
       () -> MathUtil.applyDeadband(driverController.getLeftY()*0.75, OperatorConstants.LEFTY_DEADBAND),
@@ -104,6 +110,9 @@ public class RobotContainer {
         .whileTrue(new ClimberCmd(Constants.ClimberConstant.CLIMBER_POWER));
     new JoystickButton(driverXbox, 9)
         .whileTrue(new ClimberCmd(-Constants.ClimberConstant.CLIMBER_POWER));
+
+    /*new JoystickButton(driverXbox, 9)
+        .whileTrue(new InstantCommand(intakeSubsystem::resetAbsoluteEncoder));*/
     
 }
 

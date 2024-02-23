@@ -55,6 +55,6 @@ public final class Constants {
   {
     public static final int CLIMBER1_PORT=20;
     public static final int CLIMBER2_PORT=21;
-    public static final double CLIMBER_POWER=0.5;
+    public static final double CLIMBER_POWER=1;
   }
 }

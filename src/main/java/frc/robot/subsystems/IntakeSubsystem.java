@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.io.Console;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -55,16 +57,20 @@ public class IntakeSubsystem extends SubsystemBase {
         return pivotEncoder.getPosition();
     }
 
-    public void resetPivotEncoder()
+    public void resetAbsoluteEncoder()
     {
-        pivotEncoder.setPosition(0);
+        boreEncoder.reset();
+        SmartDashboard.putBoolean("resetlendi", true);
     }
+
+
 
     @Override
     public void periodic()
     {
         SmartDashboard.putNumber("Bore Encoder", getPivotEncoder());
         SmartDashboard.putNumber("Daha da Bore", boreEncoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Bore distance", boreEncoder.getDistance());
     }
 
     public static IntakeSubsystem getInstance()
