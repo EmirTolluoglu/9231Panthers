@@ -37,6 +37,10 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return driverController.getAButton();
     }
 
+    public boolean IntakeRolllerZero()
+    {
+        return (driverController.getPOV() == 0)|| driverController.getRightStickButton();
+    }
 
     /*Intake pivot */
     public boolean IntakePivotPositive(){
@@ -78,7 +82,8 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
     // Intake
    new Trigger(this::IntakePivotPositive).whileTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER));
-    new Trigger(this::IntakePivotNegative).whileTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
+    new Trigger(this::IntakePivotNegative).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
+    new Trigger(this::IntakeRolllerZero).onTrue(new IntakeRoller(0));
 
 
     // Intake

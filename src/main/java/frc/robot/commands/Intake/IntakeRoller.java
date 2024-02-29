@@ -16,7 +16,7 @@ public class IntakeRoller extends Command
     }
 
     @Override
-    public void execute()
+    public void initialize()
     {
         intakeSubsystem.setRollerMotor(speed);
     }

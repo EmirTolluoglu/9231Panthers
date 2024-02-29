@@ -16,7 +16,7 @@ public class ShooterPivot extends Command
     }
 
     @Override
-    public void execute()
+    public void initialize()
     {
         m_shooter.setPivotMotor(speed);
     }

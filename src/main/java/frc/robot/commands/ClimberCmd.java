@@ -16,7 +16,7 @@ public class ClimberCmd extends Command
     }
 
     @Override
-    public void execute()
+    public void initialize()
     {
         m_climber.climberMotors(speed);
     }

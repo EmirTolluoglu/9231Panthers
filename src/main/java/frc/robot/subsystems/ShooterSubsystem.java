@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstant;
@@ -19,10 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     static ShooterSubsystem instance;
 
-    private RelativeEncoder pivot1Encoder;    
-    private RelativeEncoder pivot2Encoder;
-
-    double limit_max, limit_min;
+    static DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(0);
     
     public ShooterSubsystem() {
 
@@ -39,21 +37,25 @@ public class ShooterSubsystem extends SubsystemBase {
         RollerMotor2.setInverted(true);
         PivotMotor2.setInverted(true);
 
-        pivot1Encoder = PivotMotor1.getEncoder();
-        pivot2Encoder = PivotMotor2.getEncoder();
-
+        absoluteEncoder.reset();
     }
 
     public void setRollerMotor(double forward) {
-        SmartDashboard.putNumber("Shooter Potencia (%)", forward * 100.0);
+        
         RollerMotor1.set(forward);
         RollerMotor2.set(forward);
     }
 
     public void setPivotMotor(double degree) {
-        SmartDashboard.putNumber("Shooter degree", degree);
+        
         PivotMotor1.set(degree);
         PivotMotor2.set(degree);
+    }
+
+    //get degree
+    public double getAbsoluteDegree()
+    {
+        return absoluteEncoder.getAbsolutePosition()*360;
     }
 
     public static ShooterSubsystem getInstance()

@@ -17,7 +17,7 @@ public class IntakePivot extends Command
     }
 
     @Override
-    public void execute()
+    public void initialize()
     {
         intakeSubsystem.setPivotMotor(speed);
     }

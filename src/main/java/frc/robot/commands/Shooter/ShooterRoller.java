@@ -16,11 +16,12 @@ public class ShooterRoller extends Command
     }
     
     @Override
-    public void execute()
+    public void initialize()
     {
         shooterSubsystem.setRollerMotor(speed);
     }
-
+    
+    
     @Override 
     public void end(boolean interrupted)
     {
