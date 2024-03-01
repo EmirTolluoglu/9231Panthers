@@ -24,6 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
     
     private DutyCycleEncoder absoluteEncoder;
 
+    private DigitalInput limitSwitch=new DigitalInput(1);
     private RelativeEncoder rollerEncoder;
 
     static IntakeSubsystem instance;
@@ -38,6 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         pivotMotor.setInverted(true);
 
+        
         absoluteEncoder= new DutyCycleEncoder(0);
         rollerEncoder = rollerMotor.getEncoder();
     }
@@ -52,7 +54,10 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.set(forward);
     }
 
-    
+    public boolean getLimitSwitch()
+    {
+        return limitSwitch.get();
+    }
 
     public void resetAbsoluteEncoder()
     {
@@ -70,7 +75,7 @@ public class IntakeSubsystem extends SubsystemBase {
     {
         
         SmartDashboard.putNumber("Intake Bore", getAbsoluteEncoder());
-    
+        SmartDashboard.putBoolean("LimitW", getLimitSwitch());
     }
 
     public static IntakeSubsystem getInstance()

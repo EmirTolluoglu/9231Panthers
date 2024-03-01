@@ -7,13 +7,15 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.ShooterConstant;
 
 public class ShooterSubsystem extends SubsystemBase {
-    
+    private PIDController shooterPID;
     CANSparkMax PivotMotor1 = new CANSparkMax(ShooterConstant.PIVOT_MOTOR1_PORT, MotorType.kBrushless);
     CANSparkMax PivotMotor2 = new CANSparkMax(ShooterConstant.PIVOT_MOTOR2_PORT, MotorType.kBrushless);
     
@@ -23,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
     static ShooterSubsystem instance;
 
     static DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(9);
-    
+    public double degreeAim;
     public ShooterSubsystem() {
 
         PivotMotor1.restoreFactoryDefaults();
@@ -40,7 +42,20 @@ public class ShooterSubsystem extends SubsystemBase {
         PivotMotor1.setInverted(true);
 
         absoluteEncoder.reset();
+
+        shooterPID=new PIDController(3,0,0);
+        PIDinitialize(1.05);
+    }
+    private void PIDinitialize(double degree)
+    {
+        degreeAim = degree;
+        shooterPID.reset();
+        shooterPID.setSetpoint(degree);
+        shooterPID.setTolerance(0.01);
         
+    }
+    public void changeDegreeAim(double degree) {
+        PIDinitialize(degree);
     }
 
     public void setRollerMotor(double forward) {
@@ -66,6 +81,12 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic()
     {
         SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
+        setPivotMotor(shooterPID.calculate(getAbsoluteDegree()));
+        if(LimelightHelpers.getTV("limelight"))
+        {
+            SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
+            changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
+        }
     }
 
     public static ShooterSubsystem getInstance()

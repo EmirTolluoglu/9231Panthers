@@ -22,6 +22,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
     
     static DriverControlsSubsystem instance;
     private ClimberSubsystem m_climber;
+    private IntakeSubsystem m_intake;
     private XboxController driverController;
     private PS4Controller operatorController;
 
@@ -29,6 +30,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
         driverController = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
         operatorController = new PS4Controller(Constants.OperatorConstants.kOperatorControllerPort);
         m_climber=ClimberSubsystem.getInstance();
+        m_intake=IntakeSubsystem.getInstance();
     }
 
     public XboxController getDriverController(){
@@ -122,7 +124,8 @@ public class DriverControlsSubsystem extends SubsystemBase{
     public void registerTriggers(){
 
     // Intake
-   new Trigger(this::IntakeRollerOut).whileTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER));
+   new Trigger(this::IntakeRollerOut).onTrue(new InstantCommand(()->m_intake.setRollerMotor(Constants.IntakeConstants.AMP_SHOOT_POWER)))
+                                        .onFalse(new InstantCommand(()->m_intake.setRollerMotor(0)));
     new Trigger(this::IntakeRollerIn).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
                                         .onFalse(new IntakeRoller(0));
     new Trigger(this::IntakeRolllerZero).onTrue(new IntakeRoller(0));
@@ -152,7 +155,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
     //PID
     new Trigger(this::IntakeMidPID).onTrue(new IntakePIDControl(1.04));
-    new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.353));
+    new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.3));
     new Trigger(this::shooterTopPID).onTrue(new ShooterPIDControl(0.95));
     new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
     }
