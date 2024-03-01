@@ -20,7 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     static ShooterSubsystem instance;
 
-    static DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(0);
+    static DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(9);
     
     public ShooterSubsystem() {
 

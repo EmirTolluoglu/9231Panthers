@@ -2,13 +2,16 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.ClimberCmd;
+import frc.robot.commands.Intake.IntakePIDControl;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
 import frc.robot.commands.Shooter.ShooterPivot;
@@ -17,15 +20,23 @@ import frc.robot.commands.Shooter.ShooterRoller;
 public class DriverControlsSubsystem extends SubsystemBase{
     
     static DriverControlsSubsystem instance;
+    private ClimberSubsystem m_climber;
     private XboxController driverController;
- 
+    private PS4Controller operatorController;
 
     public DriverControlsSubsystem(){
         driverController = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
+        operatorController = new PS4Controller(Constants.OperatorConstants.kOperatorControllerPort);
+        m_climber=ClimberSubsystem.getInstance();
     }
 
     public XboxController getDriverController(){
         return driverController;
+    }
+
+    public PS4Controller getOperatorController()
+    {
+        return operatorController;
     }
 
     /*Intake roller */
@@ -65,11 +76,31 @@ public class DriverControlsSubsystem extends SubsystemBase{
     }
 
     /*Climber */
-    public boolean ClimberPositive(){
-        return driverController.getBackButton();
+    public boolean Climber1Positive(){
+        return operatorController.getTriangleButton();
     }
-    public boolean ClimberNegative(){
-        return driverController.getStartButton();
+    public boolean Climber1Negative(){
+        return operatorController.getCircleButton();
+    }
+
+    public boolean Climber2Positive()
+    {
+        return operatorController.getSquareButton();
+    }
+    
+    public boolean Climber2Negative()
+    {
+        return operatorController.getCrossButton();
+    }
+
+    public boolean IntakeMidPID()
+    {
+        return operatorController.getR1Button();
+    }
+
+    public boolean IntakeOutPID()
+    {
+        return operatorController.getL1Button();
     }
 
 
@@ -78,11 +109,13 @@ public class DriverControlsSubsystem extends SubsystemBase{
     }
 
 
+
     public void registerTriggers(){
 
     // Intake
-   new Trigger(this::IntakePivotPositive).whileTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER));
-    new Trigger(this::IntakePivotNegative).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
+   new Trigger(this::IntakeRollerOut).whileTrue(new IntakeRoller(Constants.IntakeConstants.AMP_SHOOT_POWER));
+    new Trigger(this::IntakeRollerIn).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
+                                        .onFalse(new IntakeRoller(0));
     new Trigger(this::IntakeRolllerZero).onTrue(new IntakeRoller(0));
 
 
@@ -99,9 +132,18 @@ public class DriverControlsSubsystem extends SubsystemBase{
     new Trigger(this::ShooterRoller).whileTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
 
     // Climber
-    new Trigger(this::ClimberPositive).whileTrue(new ClimberCmd(Constants.ClimberConstant.CLIMBER_POWER));
-    new Trigger(this::ClimberNegative).whileTrue(new ClimberCmd(-Constants.ClimberConstant.CLIMBER_POWER));
+    new Trigger(this::Climber1Positive).onTrue(new InstantCommand(()->m_climber.climber1Motor(Constants.ClimberConstant.CLIMBER_POWER)))
+                                        .onFalse(new InstantCommand(()->m_climber.climber1Motor(0)));
+    new Trigger(this::Climber1Negative).onTrue(new InstantCommand(()->m_climber.climber1Motor(-Constants.ClimberConstant.CLIMBER_POWER)))
+                                        .onFalse(new InstantCommand(()->m_climber.climber1Motor(0)));
+    new Trigger(this::Climber2Positive).onTrue(new InstantCommand(()->m_climber.climber2Motor(Constants.ClimberConstant.CLIMBER_POWER)))
+                                        .onFalse(new InstantCommand(()->m_climber.climber2Motor(0)));
+    new Trigger(this::Climber2Negative).onTrue(new InstantCommand(()->m_climber.climber2Motor(-Constants.ClimberConstant.CLIMBER_POWER)))
+                                        .onFalse(new InstantCommand(()->m_climber.climber2Motor(0)));
 
+    //PID
+    new Trigger(this::IntakeMidPID).onTrue(new IntakePIDControl(1.04));
+    new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.32));
 
     }
     public static DriverControlsSubsystem getInstance()
@@ -118,10 +160,10 @@ public class DriverControlsSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("TIMER", DriverStation.getMatchTime());
 
         if(DriverStation.getMatchTime() < 20){
-            setRumble(1);
+            //setRumble(1);
         }
         else if(DriverStation.getMatchTime() < 10){
-            setRumble(1);
+            //setRumble(1);
         }
     }
 

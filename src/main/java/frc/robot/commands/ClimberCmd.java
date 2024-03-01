@@ -18,12 +18,12 @@ public class ClimberCmd extends Command
     @Override
     public void initialize()
     {
-        m_climber.climberMotors(speed);
+        m_climber.climber1Motor(speed);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        m_climber.climberMotors(0);
+        m_climber.climber2Motor(0);
     }
 }

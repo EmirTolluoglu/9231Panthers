@@ -28,6 +28,7 @@ public final class Constants {
   }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort=1;
     public static final double LEFTX_DEADBAND = 0.2;
     public static final double LEFTY_DEADBAND = 0.2;
     public static final double RIGHTX_DEADBAND = 0.2;
@@ -38,7 +39,7 @@ public final class Constants {
     public static final int ROLLER_MOTOR_PORT = 15;
     public static final double PIVOT_POWER = 0.5;
     public static final double AMP_SHOOT_POWER = 0.52;
-    public static final double ROLLER_POWER = 0.2;
+    public static final double ROLLER_POWER = 0.4;
     public static final int kCPR=8192;
   }
 

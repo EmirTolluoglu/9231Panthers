@@ -24,10 +24,10 @@ public class IntakeSubsystem extends SubsystemBase {
     
     private DutyCycleEncoder absoluteEncoder;
 
+    private RelativeEncoder rollerEncoder;
+
     static IntakeSubsystem instance;
 
-
-    
     public IntakeSubsystem() 
     {
         pivotMotor.restoreFactoryDefaults();
@@ -36,8 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         rollerMotor.setIdleMode(IdleMode.kBrake);
 
+        pivotMotor.setInverted(true);
+
         absoluteEncoder= new DutyCycleEncoder(0);
-        
+        rollerEncoder = rollerMotor.getEncoder();
     }
 
     public void setRollerMotor(double forward) {
@@ -68,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
     {
         
         SmartDashboard.putNumber("Daha da Bore", getAbsoluteEncoder());
-        
+        SmartDashboard.putNumber("Roller Encoder", rollerEncoder.getPosition());
     }
 
     public static IntakeSubsystem getInstance()

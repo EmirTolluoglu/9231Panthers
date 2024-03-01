@@ -14,7 +14,7 @@ public class IntakePIDControl extends Command
     {
         this.setPoint=setPoint;
         intakeSubsystem=IntakeSubsystem.getInstance();
-        intakePID = new PIDController(0, 0, 0);
+        intakePID = new PIDController(7, 0, 0.06);
         addRequirements(intakeSubsystem);
     }
     
