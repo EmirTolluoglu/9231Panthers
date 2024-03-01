@@ -14,6 +14,7 @@ import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.Intake.IntakePIDControl;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
+import frc.robot.commands.Shooter.ShooterPIDControl;
 import frc.robot.commands.Shooter.ShooterPivot;
 import frc.robot.commands.Shooter.ShooterRoller;
 
@@ -103,6 +104,14 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return operatorController.getL1Button();
     }
 
+    public boolean shooterTopPID(){
+        return driverController.getRightTriggerAxis()>0;
+    }
+
+    public boolean shooterDownPID()
+    {
+        return driverController.getPOV()==90;
+    }
 
     public void setRumble(double speed){
         driverController.setRumble(RumbleType.kBothRumble, speed);
@@ -143,8 +152,9 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
     //PID
     new Trigger(this::IntakeMidPID).onTrue(new IntakePIDControl(1.04));
-    new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.32));
-
+    new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.353));
+    new Trigger(this::shooterTopPID).onTrue(new ShooterPIDControl(0.95));
+    new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
     }
     public static DriverControlsSubsystem getInstance()
     {

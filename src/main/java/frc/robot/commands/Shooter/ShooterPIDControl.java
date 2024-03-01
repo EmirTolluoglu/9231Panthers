@@ -15,7 +15,7 @@ public class ShooterPIDControl extends Command
         this.degree=degree;
         shooterSubsystem=ShooterSubsystem.getInstance();
         addRequirements(shooterSubsystem);
-        shooterPID=new PIDController(0,0,0);
+        shooterPID=new PIDController(2.5,0,0);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.time.Period;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -35,9 +37,10 @@ public class ShooterSubsystem extends SubsystemBase {
         RollerMotor2.setIdleMode(IdleMode.kBrake);
         
         RollerMotor2.setInverted(true);
-        PivotMotor2.setInverted(true);
+        PivotMotor1.setInverted(true);
 
         absoluteEncoder.reset();
+        
     }
 
     public void setRollerMotor(double forward) {
@@ -55,7 +58,14 @@ public class ShooterSubsystem extends SubsystemBase {
     //get degree
     public double getAbsoluteDegree()
     {
-        return absoluteEncoder.getAbsolutePosition()*360;
+        double bizim_encoder=(absoluteEncoder.getAbsolutePosition()<0.5f)? absoluteEncoder.getAbsolutePosition()+1:absoluteEncoder.getAbsolutePosition() ;
+        return bizim_encoder;
+    }
+
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
     }
 
     public static ShooterSubsystem getInstance()

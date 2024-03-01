@@ -69,8 +69,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic()
     {
         
-        SmartDashboard.putNumber("Daha da Bore", getAbsoluteEncoder());
-        SmartDashboard.putNumber("Roller Encoder", rollerEncoder.getPosition());
+        SmartDashboard.putNumber("Intake Bore", getAbsoluteEncoder());
+    
     }
 
     public static IntakeSubsystem getInstance()

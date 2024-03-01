@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -40,7 +41,7 @@ public class SwerveSubsystem extends SubsystemBase {
   
   public SwerveSubsystem(File directory) 
   {
-    SwerveDriveTelemetry.verbosity=TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity=TelemetryVerbosity.LOW;
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MaxModuleSpeed);
@@ -58,26 +59,27 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setupPathPlanner()
   {
-AutoBuilder.configureHolonomic(
-            this::getPose,
-            this::resetOdometry,
-            this::getRobotOrientedVelocity,
-            this::setChassisSpeed,
-            new HolonomicPathFollowerConfig(
-                new PIDConstants(Constants.PIDConstants.kSwerveAutoPIDP, Constants.PIDConstants.kSwerveAutoPIDI, Constants.PIDConstants.kSwerveAutoPIDD),
-                new PIDConstants(
-                    swerveDrive.swerveController.config.headingPIDF.p,
-                    swerveDrive.swerveController.config.headingPIDF.i,
-                    swerveDrive.swerveController.config.headingPIDF.d),
-                Constants.MaxModuleSpeed,
-                Constants.driveBaseRadius,
-                new ReplanningConfig()
-            ),
-            this::shouldPathFlip,
-            this
-        );  }
+  AutoBuilder.configureHolonomic(
+              this::getPose,
+              this::resetOdometry,
+              this::getRobotOrientedVelocity,
+              this::setChassisSpeed,
+              new HolonomicPathFollowerConfig(
+                  new PIDConstants(Constants.PIDConstants.kSwerveAutoPIDP, Constants.PIDConstants.kSwerveAutoPIDI, Constants.PIDConstants.kSwerveAutoPIDD),
+                  new PIDConstants(
+                      swerveDrive.swerveController.config.headingPIDF.p,
+                      swerveDrive.swerveController.config.headingPIDF.i,
+                      swerveDrive.swerveController.config.headingPIDF.d),
+                  Constants.MaxModuleSpeed,
+                  Constants.driveBaseRadius,
+                  new ReplanningConfig()
+              ),
+              this::shouldPathFlip,
+              this
+          );  
+  }
 
-        public Command getAutonomousCommand(String pathName, boolean setOdomToStart)
+  public Command getAutonomousCommand(String pathName, boolean setOdomToStart)
   {
     // Load the path you want to follow using its name in the GUI
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -91,7 +93,7 @@ AutoBuilder.configureHolonomic(
     return AutoBuilder.followPath(path);
   }
   
- public Rotation2d getHeading()
+  public Rotation2d getHeading()
   {
     return getPose().getRotation();
   }
@@ -144,7 +146,8 @@ AutoBuilder.configureHolonomic(
     // This method will be called once per scheduler run during simulation
   }
 
- public static SwerveSubsystem getInstance() {
+  public static SwerveSubsystem getInstance() 
+  {
     if (INSTANCE == null)
     {
       INSTANCE = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
@@ -152,37 +155,55 @@ AutoBuilder.configureHolonomic(
     return INSTANCE;
   }
 
-  public SwerveController getSwerveController(){
+  public SwerveController getSwerveController()
+  {
         return swerveDrive.swerveController;
-    }
+  }
 
 
-    public void resetOdometry(Pose2d pose){
-        swerveDrive.resetOdometry(pose);
-    }
+  public void resetOdometry(Pose2d pose)
+  {
+      swerveDrive.resetOdometry(pose);
+  }
 
-    public Pose2d getPose(){
-        return swerveDrive.getPose();
-    }
+  public Pose2d getPose()
+  {
+      return swerveDrive.getPose();
+  }
 
-    public void setChassisSpeed(ChassisSpeeds velocity){
-        swerveDrive.setChassisSpeeds(velocity);
-    }
-    public ChassisSpeeds getRobotOrientedVelocity(){
+  public void setChassisSpeed(ChassisSpeeds velocity)
+  {
+      swerveDrive.setChassisSpeeds(velocity);
+  }
+
+  public ChassisSpeeds getRobotOrientedVelocity()
+  {
       return swerveDrive.getRobotVelocity();
   }
-    public boolean shouldPathFlip(){
+  
+  public boolean shouldPathFlip()
+  {
         var alliance = DriverStation.getAlliance();
 
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
         }
         return false;
-    }
+  }
+
   public void driveFieldOriented(ChassisSpeeds velocity)
   {
     swerveDrive.driveFieldOriented(velocity);
   }
 
+  public void zeroGyro()
+  {
+    swerveDrive.zeroGyro();
+  }
+
+  public void addVisionReading(Pose2d robotPose2d)
+  {
+    swerveDrive.addVisionMeasurement(robotPose2d,Timer.getFPGATimestamp());
+  }
 
 }
