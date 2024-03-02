@@ -23,6 +23,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
     static DriverControlsSubsystem instance;
     private ClimberSubsystem m_climber;
     private IntakeSubsystem m_intake;
+    private ShooterSubsystem m_shooter;
     private XboxController driverController;
     private PS4Controller operatorController;
 
@@ -128,20 +129,20 @@ public class DriverControlsSubsystem extends SubsystemBase{
                                         .onFalse(new InstantCommand(()->m_intake.setRollerMotor(0)));
     new Trigger(this::IntakeRollerIn).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
                                         .onFalse(new IntakeRoller(0));
-    new Trigger(this::IntakeRolllerZero).onTrue(new IntakeRoller(0));
+    
 
 
     // Intake
-    new Trigger(this::IntakePivotPositive).whileTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_POWER));
-    new Trigger(this::IntakePivotNegative).whileTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_POWER));
+    new Trigger(this::IntakePivotPositive).onTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_POWER));
+    new Trigger(this::IntakePivotNegative).onTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_POWER));
 
 
     // Shooter
-    new Trigger(this::ShooterPivotPositive).whileTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER));
-    new Trigger(this::ShooterPivotNegative).whileTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER));
+    new Trigger(this::ShooterPivotPositive).onTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER));
+    new Trigger(this::ShooterPivotNegative).onTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER));
 
     // Shooter
-    new Trigger(this::ShooterRoller).whileTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
+    new Trigger(this::ShooterRoller).onTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
 
     // Climber
     new Trigger(this::Climber1Positive).onTrue(new InstantCommand(()->m_climber.climber1Motor(Constants.ClimberConstant.CLIMBER_POWER)))
