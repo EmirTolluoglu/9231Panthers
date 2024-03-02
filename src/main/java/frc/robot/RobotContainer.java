@@ -1,12 +1,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.sequence.IntakeSequence;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.DriverControlsSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.io.File;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -53,15 +55,19 @@ public class RobotContainer {
     intakeSubsystem=IntakeSubsystem.getInstance();
     driverControlsSubsystem = DriverControlsSubsystem.getInstance();
     
+
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand2(
       () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFTY_DEADBAND),
       () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFTX_DEADBAND),
       () ->  MathUtil.applyDeadband(driverController.getRightX(), OperatorConstants.RIGHTX_DEADBAND));
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
-    
     driverControlsSubsystem.registerTriggers();
-    autoChooser = AutoBuilder.buildAutoChooser("Test");
+    NamedCommands.registerCommand("intakeSequence", new IntakeSequence());
+
+
+
+    autoChooser = AutoBuilder.buildAutoChooser("yerden al");
     SmartDashboard.putData("Auto Mode", autoChooser);
   }
 
