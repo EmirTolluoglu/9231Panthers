@@ -133,16 +133,21 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
 
     // Intake
-    new Trigger(this::IntakePivotPositive).onTrue(new IntakePivot(Constants.IntakeConstants.PIVOT_POWER));
-    new Trigger(this::IntakePivotNegative).onTrue(new IntakePivot(-Constants.IntakeConstants.PIVOT_POWER));
+    new Trigger(this::IntakePivotPositive).onTrue(new InstantCommand(()->m_intake.setPivotMotor(Constants.IntakeConstants.PIVOT_POWER)))
+                                            .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
 
-
-    // Shooter
-    new Trigger(this::ShooterPivotPositive).onTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER));
-    new Trigger(this::ShooterPivotNegative).onTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER));
+    new Trigger(this::IntakePivotNegative).onTrue(new InstantCommand(()->m_intake.setPivotMotor(-Constants.IntakeConstants.PIVOT_POWER)))
+                                            .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
 
     // Shooter
-    new Trigger(this::ShooterRoller).onTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
+    new Trigger(this::ShooterPivotPositive).onTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER))
+                                            .onFalse(new ShooterPivot(0));
+    new Trigger(this::ShooterPivotNegative).onTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER))
+                                            .onFalse(new ShooterPivot(0));
+
+    // Shooter
+    new Trigger(this::ShooterRoller).onTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER))
+                                        .onFalse(new ShooterRoller(0));
 
     // Climber
     new Trigger(this::Climber1Positive).onTrue(new InstantCommand(()->m_climber.climber1Motor(Constants.ClimberConstant.CLIMBER_POWER)))

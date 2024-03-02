@@ -21,9 +21,5 @@ public class ShooterPivot extends Command
         m_shooter.setPivotMotor(speed);
     }
 
-    @Override
-    public void end(boolean interrupted)
-    {
-        m_shooter.setPivotMotor(0);
-    }
+    
 }
