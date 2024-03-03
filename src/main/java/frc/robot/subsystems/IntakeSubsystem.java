@@ -8,22 +8,26 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkMaxAlternateEncoder.Type;
+import com.revrobotics.SparkPIDController.ArbFFUnits;
 
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase 
 {    
     private static double kS = 0.00;
-    private static double kG = 0;
+    private static double kG = 0.2;
     private static double kV = 0.0; 
 
     CANSparkMax pivotMotor;
@@ -61,9 +65,33 @@ public class IntakeSubsystem extends SubsystemBase
         rollerMotor.restoreFactoryDefaults();
 
         pivotMotor.setIdleMode(IdleMode.kCoast);
-        rollerMotor.setIdleMode(IdleMode.kCoast);
+        rollerMotor.setIdleMode(IdleMode.kBrake);
 
+
+        pivotController.setP(Constants.IntakeConstants.INTAKE_P);
+        pivotController.setI(Constants.IntakeConstants.INTAKE_I);
+        pivotController.setD(Constants.IntakeConstants.INTAKE_D);
+        pivotController.setIZone(0);
+        pivotController.setIMaxAccum(0,0);
+        
+
+        pivotController.setFeedbackDevice(boreEncoder);
+
+        boreEncoder.setPositionConversionFactor(180);
         pivotMotor.setInverted(true);
+        //pivotSet(Rotation2d.fromDegrees(0));
+    }
+
+    public void pivotSet(Rotation2d angle)
+    {
+        pivotController.setReference(
+         angle.getDegrees(),
+         CANSparkMax.ControlType.kPosition,
+         0,
+         pivotFeedForward.calculate(angle.getRadians(),0.00),
+         ArbFFUnits.kVoltage);
+         
+        setPoint=angle.getDegrees();
     }
 
     public void setRollerMotor(double forward) {
@@ -101,6 +129,8 @@ public class IntakeSubsystem extends SubsystemBase
         
         
     }
+
+    
 
     public static IntakeSubsystem getInstance()
     {

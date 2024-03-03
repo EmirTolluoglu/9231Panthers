@@ -82,7 +82,7 @@ public class ShooterSubsystem extends SubsystemBase {
     {
         SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
         setPivotMotor(shooterPID.calculate(getAbsoluteDegree()));
-        
+
         if(LimelightHelpers.getTV("limelight"))
         {
             SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));

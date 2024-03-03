@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
@@ -107,7 +108,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return operatorController.getL1Button();
     }
 
-    public boolean shooterTopPID(){
+    public boolean IntakeSetVoltage(){
         return driverController.getRightTriggerAxis()>0;
     }
 
@@ -160,10 +161,12 @@ public class DriverControlsSubsystem extends SubsystemBase{
                                         .onFalse(new InstantCommand(()->m_climber.climber2Motor(0)));
 
     //PID
-    new Trigger(this::IntakeMidPID).onTrue(new IntakePIDControl(1.04));
+    new Trigger(this::IntakeMidPID).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))));
     new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.3));
-    new Trigger(this::shooterTopPID).onTrue(new ShooterPIDControl(0.95));
-    new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
+    //new Trigger(this::shooterTopPID).onTrue(new ShooterPIDControl(0.95));
+    //new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
+    new Trigger(this::IntakeSetVoltage).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))))
+                                        .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
     }
     public static DriverControlsSubsystem getInstance()
     {

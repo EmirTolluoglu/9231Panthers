@@ -37,9 +37,12 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int PIVOT_MOTOR_PORT = 9;
     public static final int ROLLER_MOTOR_PORT = 15;
-    public static final double PIVOT_POWER = 0.5;
+    public static final double PIVOT_POWER = 0.3;
     public static final double AMP_SHOOT_POWER = 0.52;
     public static final double ROLLER_POWER = 0.8;
+    public static final double INTAKE_P=0;
+    public static final double INTAKE_I=0;
+    public static final double INTAKE_D=0;
     public static final int kCPR=8192;
   }
 

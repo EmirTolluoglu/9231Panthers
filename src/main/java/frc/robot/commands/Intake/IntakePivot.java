@@ -21,10 +21,6 @@ public class IntakePivot extends Command
     {
         intakeSubsystem.setPivotMotor(speed);
     }
+    
 
-    @Override
-    public void end(boolean interrupted)
-    {
-        intakeSubsystem.setPivotMotor(0);
-    }
 }
