@@ -126,8 +126,7 @@ public class IntakeSubsystem extends SubsystemBase
         
         SmartDashboard.putNumber("Intake Bore", getAbsoluteEncoder());
         SmartDashboard.putBoolean("LimitW", getLimitSwitch());
-        
-        
+        SmartDashboard.putNumber("Setpoint", setPoint);
     }
 
     

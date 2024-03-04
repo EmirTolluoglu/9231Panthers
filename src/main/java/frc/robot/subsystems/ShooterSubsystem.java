@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -60,8 +61,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setRollerMotor(double forward) {
         
-        RollerMotor1.set(forward);
-        RollerMotor2.set(forward);
+        RollerMotor1.setVoltage(forward);
+        RollerMotor2.setVoltage(forward);
     }
 
     public void setPivotMotor(double degree) {
@@ -81,13 +82,19 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic()
     {
         SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
+        SmartDashboard.putNumber("Setpoint", degreeAim);
+        double newDegree = SmartDashboard.getNumber("SetPoint", 1.05);
+        if(newDegree != degreeAim)
+        {
+            changeDegreeAim(newDegree);
+        }
         setPivotMotor(shooterPID.calculate(getAbsoluteDegree()));
 
-        if(LimelightHelpers.getTV("limelight"))
-        {
-            SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
-            changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
-        }
+        //if(LimelightHelpers.getTV("limelight"))
+        //{
+        //    SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
+        //    changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
+        //}
     }
 
     public static ShooterSubsystem getInstance()
@@ -99,4 +106,15 @@ public class ShooterSubsystem extends SubsystemBase {
         return instance;
     }
 
+    public static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_MAP = new InterpolatingDoubleTreeMap();
+
+    static {
+        //DISTANCE_TO_ANGLE_MAP.put(1.25, ArmConstants.kSUBWOOFER);
+        //DISTANCE_TO_ANGLE_MAP.put(2.2, ArmConstants.kOffset - 0.075);
+        //DISTANCE_TO_ANGLE_MAP.put(3.0, ArmConstants.kOffset - 0.058);
+        //DISTANCE_TO_ANGLE_MAP.put(4.1, ArmConstants.kOffset - 0.038);
+        //DISTANCE_TO_ANGLE_MAP.put(4.9, ArmConstants.kOffset - 0.035);
+        //DISTANCE_TO_ANGLE_MAP.put(5.5, ArmConstants.kOffset - 0.028);
+      }
+  
 }

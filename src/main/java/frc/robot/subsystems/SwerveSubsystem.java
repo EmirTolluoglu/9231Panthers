@@ -201,9 +201,9 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.zeroGyro();
   }
 
-  public void addVisionReading(Pose2d robotPose2d)
+  public void addVisionReading(Pose2d robotPose2d,double time)
   {
-    swerveDrive.addVisionMeasurement(robotPose2d,Timer.getFPGATimestamp());
+    swerveDrive.addVisionMeasurement(robotPose2d,time);
   }
 
 }

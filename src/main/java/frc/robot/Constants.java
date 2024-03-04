@@ -40,9 +40,9 @@ public final class Constants {
     public static final double PIVOT_POWER = 0.3;
     public static final double AMP_SHOOT_POWER = 0.52;
     public static final double ROLLER_POWER = 0.8;
-    public static final double INTAKE_P=0;
-    public static final double INTAKE_I=0;
-    public static final double INTAKE_D=0;
+    public static final double INTAKE_P=0.0085;
+    public static final double INTAKE_I=0.00;
+    public static final double INTAKE_D=0.00;
     public static final int kCPR=8192;
   }
 
@@ -52,7 +52,7 @@ public final class Constants {
     public static final int PIVOT_MOTOR1_PORT= 16;
     public static final int PIVOT_MOTOR2_PORT= 17;
     public static final double PIVOT_POWER=0.5;
-    public static final double ROLLER_POWER=1;
+    public static final double ROLLER_POWER=11.5;
   }
 
   public static class ClimberConstant

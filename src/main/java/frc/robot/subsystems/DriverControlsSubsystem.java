@@ -98,23 +98,23 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return operatorController.getCrossButton();
     }
 
-    public boolean IntakeMidPID()
-    {
-        return operatorController.getR1Button();
-    }
-
-    public boolean IntakeOutPID()
-    {
-        return operatorController.getL1Button();
-    }
-
-    public boolean IntakeSetVoltage(){
+    public boolean IntakeAmpPose(){
         return driverController.getRightTriggerAxis()>0;
     }
 
     public boolean shooterDownPID()
     {
         return driverController.getPOV()==90;
+    }
+
+    public boolean IntakeGroundPose()
+    {
+        return driverController.getPOV()==270;
+    }
+
+    public boolean IntakeFeedPose()
+    {
+        return driverController.getPOV()==180;
     }
 
     public void setRumble(double speed){
@@ -161,11 +161,14 @@ public class DriverControlsSubsystem extends SubsystemBase{
                                         .onFalse(new InstantCommand(()->m_climber.climber2Motor(0)));
 
     //PID
-    new Trigger(this::IntakeMidPID).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))));
-    new Trigger(this::IntakeOutPID).onTrue(new IntakePIDControl(1.3));
+    
     //new Trigger(this::shooterTopPID).onTrue(new ShooterPIDControl(0.95));
     //new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
-    new Trigger(this::IntakeSetVoltage).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))))
+    new Trigger(this::IntakeAmpPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))))
+                                        .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
+    new Trigger(this::IntakeGroundPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(200))))
+                                        .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
+     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(10))))
                                         .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
     }
     public static DriverControlsSubsystem getInstance()
