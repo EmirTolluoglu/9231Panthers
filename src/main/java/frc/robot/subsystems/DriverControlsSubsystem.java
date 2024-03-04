@@ -166,9 +166,9 @@ public class DriverControlsSubsystem extends SubsystemBase{
     //new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
     new Trigger(this::IntakeAmpPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))))
                                         .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
-    new Trigger(this::IntakeGroundPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(200))))
+    new Trigger(this::IntakeGroundPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(210))))
                                         .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
-     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(10))))
+     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(2))))
                                         .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
     }
     public static DriverControlsSubsystem getInstance()
