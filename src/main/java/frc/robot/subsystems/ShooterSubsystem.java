@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.time.Period;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -12,9 +11,8 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.LimelightHelpers;
 import frc.robot.Constants.ShooterConstant;
-
+import frc.robot.LimelightHelpers;
 public class ShooterSubsystem extends SubsystemBase {
     private PIDController shooterPID;
     CANSparkMax PivotMotor1 = new CANSparkMax(ShooterConstant.PIVOT_MOTOR1_PORT, MotorType.kBrushless);
@@ -90,11 +88,11 @@ public class ShooterSubsystem extends SubsystemBase {
         }
         setPivotMotor(shooterPID.calculate(getAbsoluteDegree()));
 
-        //if(LimelightHelpers.getTV("limelight"))
-        //{
-        //    SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
-        //    changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
-        //}
+        if(LimelightHelpers.getTV("limelight"))
+        {
+            SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
+            changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
+        }
     }
 
     public static ShooterSubsystem getInstance()
