@@ -1,8 +1,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Intake.IntakeRoller;
+import frc.robot.commands.Shooter.ShooterRoller;
 import frc.robot.commands.sequence.IntakeSequence;
 import frc.robot.commands.sequence.ShootSequence;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.DriverControlsSubsystem;
@@ -23,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
@@ -37,12 +41,12 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
 
   private final SwerveSubsystem driveSubsystem ;
-  private final ShooterRollerSubsystem shooterRollerSubsystem;
+  private final ShooterRollerSubsystem m_shooterRoller;
   private final ShooterPivotSubsystem shooterPivotSubsystem;
 
 
-  private final IntakeRollerSubsystem intakeRollerSubsystem;
-  private final IntakePivotSubsystem intakePivotSubsystem;
+  private final IntakeRollerSubsystem m_intakeRoller;
+  private final IntakePivotSubsystem m_intakePivot;
 
   private final SendableChooser<Command> autoChooser;
   private  final DriverControlsSubsystem driverControlsSubsystem;
@@ -62,10 +66,10 @@ public class RobotContainer {
     driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
     shooterPivotSubsystem= ShooterPivotSubsystem.getInstance();
-    shooterRollerSubsystem=ShooterRollerSubsystem.getInstance();
+    m_shooterRoller=ShooterRollerSubsystem.getInstance();
 
-    intakeRollerSubsystem=IntakeRollerSubsystem.getInstance();
-    intakePivotSubsystem=IntakePivotSubsystem.getInstance();
+    m_intakeRoller=IntakeRollerSubsystem.getInstance();
+    m_intakePivot=IntakePivotSubsystem.getInstance();
 
     driverControlsSubsystem = DriverControlsSubsystem.getInstance();
     
@@ -75,10 +79,25 @@ public class RobotContainer {
     NamedCommands.registerCommand("intakeSequence", new IntakeSequence());
     NamedCommands.registerCommand("shootSequence", new ShootSequence());
 
+    //intake roller
+
+    NamedCommands.registerCommand("intakeRollerIn", new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER));
+    NamedCommands.registerCommand("intakeRollerOut", new InstantCommand(()->m_intakeRoller.setRollerMotor(Constants.IntakeConstants.AMP_SHOOT_POWER)));
+    NamedCommands.registerCommand("intakeRollerStop", new InstantCommand(()->m_intakeRoller.setRollerMotor(0)));
+
+    //intake position
+    NamedCommands.registerCommand("intakeFeed", new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(2))));
+    NamedCommands.registerCommand("intakeTop", new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(90))));
+    NamedCommands.registerCommand("intakeBottom", new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(210))));
+
+    // shooter roller
+
+    NamedCommands.registerCommand("shooterRoller", new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER));
+    NamedCommands.registerCommand("shooterRollerStop", new InstantCommand(()->m_shooterRoller.setRollerMotor(0)));
 
 
 
-    autoChooser = AutoBuilder.buildAutoChooser("atis");
+    autoChooser = AutoBuilder.buildAutoChooser("ortadan at ve taksi");
     SmartDashboard.putData("Auto Mode", autoChooser);
   }
 
