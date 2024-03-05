@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "duz git"
+                  "pathName": "ust taksi"
                 }
               }
             ]
@@ -33,7 +33,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "geri"
+            "pathName": "orta taksi"
           }
         }
       ]
