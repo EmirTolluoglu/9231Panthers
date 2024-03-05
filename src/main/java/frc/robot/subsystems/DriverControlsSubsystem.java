@@ -125,7 +125,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return driverController.getPOV()==270;
     }
 
-    public boolean IntakeStart()
+    public boolean IntakeStartPose()
     {
         return driverController.getPOV()==180;
     }
@@ -191,7 +191,9 @@ public class DriverControlsSubsystem extends SubsystemBase{
                                         
     new Trigger(this::IntakeGroundPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(210))));
                                         
-     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(2))));
+     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(10))));
+
+    new Trigger(this::IntakeStartPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(0))));
                                         
     }
     public static DriverControlsSubsystem getInstance()
