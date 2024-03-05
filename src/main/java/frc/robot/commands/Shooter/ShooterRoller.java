@@ -1,24 +1,24 @@
 package frc.robot.commands.Shooter;
 
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterRollerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShooterRoller extends Command
 {
-    ShooterSubsystem shooterSubsystem ;
+    ShooterRollerSubsystem shooterRollerSubsystem;
 
     double speed;
     public ShooterRoller(double speed)
     {
         this.speed=speed;
-        shooterSubsystem= ShooterSubsystem.getInstance();
-        addRequirements(shooterSubsystem);
+        shooterRollerSubsystem= ShooterRollerSubsystem.getInstance();
+        addRequirements(shooterRollerSubsystem);
     }
     
     @Override
     public void initialize()
     {
-        shooterSubsystem.setRollerMotor(speed);
+        shooterRollerSubsystem.setRollerMotor(speed);
     }
     
     

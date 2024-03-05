@@ -2,10 +2,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.sequence.IntakeSequence;
+import frc.robot.commands.sequence.ShootSequence;
+
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.DriverControlsSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
+import frc.robot.subsystems.IntakePivotSubsystem;
+import frc.robot.subsystems.ShooterPivotSubsystem;
+import frc.robot.subsystems.ShooterRollerSubsystem;
+
 import java.io.File;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -32,8 +37,13 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
 
   private final SwerveSubsystem driveSubsystem ;
-  private final ShooterSubsystem shooterSubsystem;
-  private final IntakeSubsystem intakeSubsystem;
+  private final ShooterRollerSubsystem shooterRollerSubsystem;
+  private final ShooterPivotSubsystem shooterPivotSubsystem;
+
+
+  private final IntakeRollerSubsystem intakeRollerSubsystem;
+  private final IntakePivotSubsystem intakePivotSubsystem;
+
   private final SendableChooser<Command> autoChooser;
   private  final DriverControlsSubsystem driverControlsSubsystem;
 
@@ -51,23 +61,24 @@ public class RobotContainer {
 
     driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
-    shooterSubsystem=ShooterSubsystem.getInstance();
-    intakeSubsystem=IntakeSubsystem.getInstance();
+    shooterPivotSubsystem= ShooterPivotSubsystem.getInstance();
+    shooterRollerSubsystem=ShooterRollerSubsystem.getInstance();
+
+    intakeRollerSubsystem=IntakeRollerSubsystem.getInstance();
+    intakePivotSubsystem=IntakePivotSubsystem.getInstance();
+
     driverControlsSubsystem = DriverControlsSubsystem.getInstance();
     
 
-    Command driveFieldOrientedDirectAngle = driveSubsystem.driveCommand2(
-      () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFTY_DEADBAND),
-      () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFTX_DEADBAND),
-      () ->  MathUtil.applyDeadband(driverController.getRightX(), OperatorConstants.RIGHTX_DEADBAND));
-
-    driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
+    
     driverControlsSubsystem.registerTriggers();
     NamedCommands.registerCommand("intakeSequence", new IntakeSequence());
+    NamedCommands.registerCommand("shootSequence", new ShootSequence());
 
 
 
-    autoChooser = AutoBuilder.buildAutoChooser("yerden al");
+
+    autoChooser = AutoBuilder.buildAutoChooser("atis");
     SmartDashboard.putData("Auto Mode", autoChooser);
   }
 

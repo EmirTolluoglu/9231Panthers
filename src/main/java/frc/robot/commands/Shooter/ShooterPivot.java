@@ -1,24 +1,24 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterPivotSubsystem;
 
 public class ShooterPivot extends Command
 {
-    ShooterSubsystem m_shooter;
+    ShooterPivotSubsystem m_shooterPivot;
     double speed;
 
     public ShooterPivot(double speed)
     {
-        m_shooter=ShooterSubsystem.getInstance();
+        m_shooterPivot=ShooterPivotSubsystem.getInstance();
         this.speed=speed;
-        addRequirements(m_shooter);
+        addRequirements(m_shooterPivot);
     }
 
     @Override
     public void initialize()
     {
-        m_shooter.setPivotMotor(speed);
+        m_shooterPivot.setPivotMotor(speed);
     }
 
     

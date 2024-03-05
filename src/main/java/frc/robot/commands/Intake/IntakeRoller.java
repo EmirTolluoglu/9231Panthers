@@ -1,27 +1,26 @@
 package frc.robot.commands.Intake;
 
-import frc.robot.subsystems.IntakeSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.subsystems.IntakeRollerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeRoller extends Command 
 {
-    private IntakeSubsystem intakeSubsystem;
+    private IntakeRollerSubsystem intakeRollerSubsystem;
     private double speed;
     
 
     public IntakeRoller(double speed)
     {
-        intakeSubsystem=IntakeSubsystem.getInstance();
+        intakeRollerSubsystem=IntakeRollerSubsystem.getInstance();
         this.speed=speed;
-        addRequirements(intakeSubsystem);
+        addRequirements(intakeRollerSubsystem);
         
     }
 
     @Override
     public void initialize()
     {
-        intakeSubsystem.setRollerMotor(speed);
+        intakeRollerSubsystem.setRollerMotor(speed);
     }
 
     
@@ -29,12 +28,12 @@ public class IntakeRoller extends Command
     @Override
     public void end(boolean interrupted)
     {
-        intakeSubsystem.setRollerMotor(0);
+        intakeRollerSubsystem.setRollerMotor(0);
     }
 
     @Override 
     public boolean isFinished()
     {
-        return intakeSubsystem.getLimitSwitch();
+        return intakeRollerSubsystem.getLimitSwitch();
     }
 }

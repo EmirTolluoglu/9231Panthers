@@ -1,20 +1,12 @@
 package frc.robot.subsystems;
 
-import java.io.Console;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -24,31 +16,29 @@ import com.revrobotics.SparkPIDController.ArbFFUnits;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
-public class IntakeSubsystem extends SubsystemBase 
+public class IntakePivotSubsystem extends SubsystemBase 
 {    
     private static double kS = 0.00;
     private static double kG = 0.2;
     private static double kV = 0.0; 
 
     CANSparkMax pivotMotor;
-    CANSparkMax rollerMotor;
     
     SparkPIDController pivotController;
 
     private RelativeEncoder boreEncoder;
 
-    private DigitalInput limitSwitch=new DigitalInput(1);
+    
 
     private ArmFeedforward pivotFeedForward;
 
-    static IntakeSubsystem instance;
+    static IntakePivotSubsystem instance;
 
     static double setPoint;
 
-    public IntakeSubsystem() 
+    public IntakePivotSubsystem() 
     {
         pivotMotor = new CANSparkMax(IntakeConstants.PIVOT_MOTOR_PORT, MotorType.kBrushless);
-        rollerMotor = new CANSparkMax(IntakeConstants.ROLLER_MOTOR_PORT, MotorType.kBrushless);
         
         pivotController= pivotMotor.getPIDController();
 
@@ -62,10 +52,8 @@ public class IntakeSubsystem extends SubsystemBase
     public void motorConfig()
     {
         pivotMotor.restoreFactoryDefaults();
-        rollerMotor.restoreFactoryDefaults();
 
-        pivotMotor.setIdleMode(IdleMode.kCoast);
-        rollerMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
 
 
         pivotController.setP(Constants.IntakeConstants.INTAKE_P);
@@ -94,20 +82,13 @@ public class IntakeSubsystem extends SubsystemBase
         setPoint=angle.getDegrees();
     }
 
-    public void setRollerMotor(double forward) {
-        
-        rollerMotor.set(forward);
-    }
+ 
 
     public void setPivotMotor(double forward) {
         
         pivotMotor.set(forward);
     }
 
-    public boolean getLimitSwitch()
-    {
-        return limitSwitch.get();
-    }
 
     public void resetAbsoluteEncoder()
     {
@@ -125,17 +106,16 @@ public class IntakeSubsystem extends SubsystemBase
     {
         
         SmartDashboard.putNumber("Intake Bore", getAbsoluteEncoder());
-        SmartDashboard.putBoolean("LimitW", getLimitSwitch());
         SmartDashboard.putNumber("Setpoint", setPoint);
     }
 
     
 
-    public static IntakeSubsystem getInstance()
+    public static IntakePivotSubsystem getInstance()
     {
         if(instance==null)
         {
-            instance=new IntakeSubsystem();
+            instance=new IntakePivotSubsystem();
         }
         return instance;
     }

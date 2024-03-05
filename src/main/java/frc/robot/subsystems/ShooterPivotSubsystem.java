@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.time.Period;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -13,37 +11,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstant;
 import frc.robot.LimelightHelpers;
-public class ShooterSubsystem extends SubsystemBase {
+public class ShooterPivotSubsystem extends SubsystemBase {
+    
     private PIDController shooterPID;
     CANSparkMax PivotMotor1 = new CANSparkMax(ShooterConstant.PIVOT_MOTOR1_PORT, MotorType.kBrushless);
     CANSparkMax PivotMotor2 = new CANSparkMax(ShooterConstant.PIVOT_MOTOR2_PORT, MotorType.kBrushless);
     
-    CANSparkMax RollerMotor1 = new CANSparkMax(ShooterConstant.ROLLER_MOTOR1_PORT, MotorType.kBrushless);
-    CANSparkMax RollerMotor2 = new CANSparkMax(ShooterConstant.ROLLER_MOTOR2_PORT, MotorType.kBrushless);
+    
 
-    static ShooterSubsystem instance;
+    static ShooterPivotSubsystem instance;
 
     static DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(9);
     public double degreeAim;
-    public ShooterSubsystem() {
+    public ShooterPivotSubsystem() {
 
         PivotMotor1.restoreFactoryDefaults();
         PivotMotor2.restoreFactoryDefaults();
-        RollerMotor1.restoreFactoryDefaults();        
-        RollerMotor2.restoreFactoryDefaults();
+        
         
         PivotMotor1.setIdleMode(IdleMode.kBrake);        
         PivotMotor2.setIdleMode(IdleMode.kBrake);
-        RollerMotor1.setIdleMode(IdleMode.kBrake);
-        RollerMotor2.setIdleMode(IdleMode.kBrake);
-        
-        RollerMotor2.setInverted(true);
+       
         PivotMotor1.setInverted(true);
 
         absoluteEncoder.reset();
 
         shooterPID=new PIDController(3,0,0);
         PIDinitialize(1.05);
+        SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
     }
     private void PIDinitialize(double degree)
     {
@@ -57,11 +52,7 @@ public class ShooterSubsystem extends SubsystemBase {
         PIDinitialize(degree);
     }
 
-    public void setRollerMotor(double forward) {
-        
-        RollerMotor1.setVoltage(forward);
-        RollerMotor2.setVoltage(forward);
-    }
+   
 
     public void setPivotMotor(double degree) {
         
@@ -80,14 +71,17 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic()
     {
         SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
-        SmartDashboard.putNumber("Setpoint", degreeAim);
-        double newDegree = SmartDashboard.getNumber("SetPoint", 1.05);
+        
+        double newDegree = SmartDashboard.getNumber("Shooter SetPoint", 1.05);
         if(newDegree != degreeAim)
         {
-            changeDegreeAim(newDegree);
+           // changeDegreeAim(newDegree);
         }
         setPivotMotor(shooterPID.calculate(getAbsoluteDegree()));
 
+
+        
+        SmartDashboard.putNumber("Limelight_Pose", 1-((LimelightHelpers.getTY("limelight")/400)));
         if(LimelightHelpers.getTV("limelight"))
         {
             SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
@@ -95,11 +89,11 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public static ShooterSubsystem getInstance()
+    public static ShooterPivotSubsystem getInstance()
     {
         if (instance == null) 
         {
-            instance = new ShooterSubsystem();
+            instance = new ShooterPivotSubsystem();
         }
         return instance;
     }

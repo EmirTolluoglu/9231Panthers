@@ -1,25 +1,25 @@
 package frc.robot.commands.Intake;
 
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.IntakePivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class IntakePivot extends Command 
 {
-    private IntakeSubsystem intakeSubsystem;
+    private IntakePivotSubsystem intakePivotSubsystem;
     private double speed;
 
     public IntakePivot(double speed)
     {
-        intakeSubsystem=IntakeSubsystem.getInstance();
+        intakePivotSubsystem=IntakePivotSubsystem.getInstance();
         this.speed=speed;
-        addRequirements(intakeSubsystem);
+        addRequirements(intakePivotSubsystem);
     }
 
     @Override
     public void initialize()
     {
-        intakeSubsystem.setPivotMotor(speed);
+        intakePivotSubsystem.setPivotMotor(speed);
     }
     
 

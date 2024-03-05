@@ -1,21 +1,22 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ClimberCmd;
-import frc.robot.commands.Intake.IntakePIDControl;
 import frc.robot.commands.Intake.IntakePivot;
 import frc.robot.commands.Intake.IntakeRoller;
-import frc.robot.commands.Shooter.ShooterPIDControl;
 import frc.robot.commands.Shooter.ShooterPivot;
 import frc.robot.commands.Shooter.ShooterRoller;
 
@@ -23,8 +24,11 @@ public class DriverControlsSubsystem extends SubsystemBase{
     
     static DriverControlsSubsystem instance;
     private ClimberSubsystem m_climber;
-    private IntakeSubsystem m_intake;
-    private ShooterSubsystem m_shooter;
+    private IntakePivotSubsystem m_intakePivot;
+    private IntakeRollerSubsystem m_intakeRoller;
+    private ShooterPivotSubsystem m_shooterPivot;
+    private ShooterRollerSubsystem m_shooterRoller;
+    private SwerveSubsystem swerveSubsystem;
     private XboxController driverController;
     private PS4Controller operatorController;
 
@@ -32,7 +36,11 @@ public class DriverControlsSubsystem extends SubsystemBase{
         driverController = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
         operatorController = new PS4Controller(Constants.OperatorConstants.kOperatorControllerPort);
         m_climber=ClimberSubsystem.getInstance();
-        m_intake=IntakeSubsystem.getInstance();
+        m_intakeRoller=IntakeRollerSubsystem.getInstance();
+        m_intakePivot=IntakePivotSubsystem.getInstance();
+        m_shooterPivot=ShooterPivotSubsystem.getInstance();
+        m_shooterRoller=ShooterRollerSubsystem.getInstance();
+        swerveSubsystem=SwerveSubsystem.getInstance();
     }
 
     public XboxController getDriverController(){
@@ -46,11 +54,11 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
     /*Intake roller */
     public boolean IntakeRollerIn(){
-        return driverController.getBButton();
+        return driverController.getRightTriggerAxis()>0;
     }
     
     public boolean IntakeRollerOut(){
-        return driverController.getAButton();
+        return driverController.getLeftTriggerAxis()>0;
     }
 
     public boolean IntakeRolllerZero()
@@ -58,61 +66,66 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return (driverController.getPOV() == 0)|| driverController.getRightStickButton();
     }
 
-    /*Intake pivot */
+    /*Intake pivot 
     public boolean IntakePivotPositive(){
         return driverController.getYButton();
     }
     
     public boolean IntakePivotNegative(){
         return driverController.getXButton();
-    }
+    }*/
 
-    /*Shooter pivot */
+    /*Shooter pivot *//* 
      public boolean ShooterPivotPositive(){
         return driverController.getRightBumper();
     }
      public boolean ShooterPivotNegative(){
         return driverController.getLeftBumper();
-    }
+    }*/
 
     /*Shooter roller */
     public boolean ShooterRoller(){
-        return driverController.getLeftTriggerAxis() > 0;
+        return operatorController.getCrossButton();
     }
 
     /*Climber */
     public boolean Climber1Positive(){
-        return operatorController.getTriangleButton();
+        return operatorController.getR2Button();
     }
     public boolean Climber1Negative(){
-        return operatorController.getCircleButton();
+        return operatorController.getR1Button();
     }
 
     public boolean Climber2Positive()
     {
-        return operatorController.getSquareButton();
+        return operatorController.getL2Button();
     }
     
     public boolean Climber2Negative()
     {
-        return operatorController.getCrossButton();
+        return operatorController.getL1Button();
     }
 
     public boolean IntakeAmpPose(){
-        return driverController.getRightTriggerAxis()>0;
+        return driverController.getPOV()==0;
     }
 
-    public boolean shooterDownPID()
+   // public boolean shooterDownPID()
+    //{
+    //    return driverController.getPOV()==180;
+    //}
+
+    public boolean IntakeGroundPose()
     {
         return driverController.getPOV()==90;
     }
 
-    public boolean IntakeGroundPose()
+    public boolean IntakeFeedPose()
     {
         return driverController.getPOV()==270;
     }
 
-    public boolean IntakeFeedPose()
+    public boolean IntakeStart()
     {
         return driverController.getPOV()==180;
     }
@@ -121,30 +134,40 @@ public class DriverControlsSubsystem extends SubsystemBase{
         driverController.setRumble(RumbleType.kBothRumble, speed);
     }
 
+    public boolean isFieldOrianted(){
+       return !driverController.getRightBumper();
+    }
 
+    public void registerTriggers()
+    {
 
-    public void registerTriggers(){
+        Command driveFieldOrientedDirectAngle = swerveSubsystem.driveCommand2(
+        () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFTY_DEADBAND),
+        () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFTX_DEADBAND),
+        () ->  MathUtil.applyDeadband(driverController.getRightX(), OperatorConstants.RIGHTX_DEADBAND),
+        !driverController.getRightBumper());
 
+        swerveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
     // Intake
-   new Trigger(this::IntakeRollerOut).onTrue(new InstantCommand(()->m_intake.setRollerMotor(Constants.IntakeConstants.AMP_SHOOT_POWER)))
-                                        .onFalse(new InstantCommand(()->m_intake.setRollerMotor(0)));
+   new Trigger(this::IntakeRollerOut).onTrue(new InstantCommand(()->m_intakeRoller.setRollerMotor(Constants.IntakeConstants.AMP_SHOOT_POWER)))
+                                        .onFalse(new InstantCommand(()->m_intakeRoller.setRollerMotor(0)));
     new Trigger(this::IntakeRollerIn).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
                                         .onFalse(new IntakeRoller(0));
     
 
 
     // Intake
-    new Trigger(this::IntakePivotPositive).onTrue(new InstantCommand(()->m_intake.setPivotMotor(Constants.IntakeConstants.PIVOT_POWER)))
-                                            .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
+    //new Trigger(this::IntakePivotPositive).onTrue(new InstantCommand(()->m_intakePivot.setPivotMotor(Constants.IntakeConstants.PIVOT_POWER)))
+    //                                        .onFalse(new InstantCommand(()->m_intakePivot.setPivotMotor(0)));
 
-    new Trigger(this::IntakePivotNegative).onTrue(new InstantCommand(()->m_intake.setPivotMotor(-Constants.IntakeConstants.PIVOT_POWER)))
-                                            .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
+    //new Trigger(this::IntakePivotNegative).onTrue(new InstantCommand(()->m_intakePivot.setPivotMotor(-Constants.IntakeConstants.PIVOT_POWER)))
+    //                                        .onFalse(new InstantCommand(()->m_intakePivot.setPivotMotor(0)));
 
     // Shooter
-    new Trigger(this::ShooterPivotPositive).onTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER))
-                                            .onFalse(new ShooterPivot(0));
-    new Trigger(this::ShooterPivotNegative).onTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER))
-                                            .onFalse(new ShooterPivot(0));
+    //new Trigger(this::ShooterPivotPositive).onTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER))
+    //                                        .onFalse(new ShooterPivot(0));
+    //new Trigger(this::ShooterPivotNegative).onTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER))
+    //                                        .onFalse(new ShooterPivot(0));
 
     // Shooter
     new Trigger(this::ShooterRoller).onTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER))
@@ -164,12 +187,12 @@ public class DriverControlsSubsystem extends SubsystemBase{
     
     //new Trigger(this::shooterTopPID).onTrue(new ShooterPIDControl(0.95));
     //new Trigger(this::shooterDownPID).onTrue(new ShooterPIDControl(1.05));
-    new Trigger(this::IntakeAmpPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(90))))
-                                        .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
-    new Trigger(this::IntakeGroundPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(210))))
-                                        .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
-     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intake.pivotSet(Rotation2d.fromDegrees(2))))
-                                        .onFalse(new InstantCommand(()->m_intake.setPivotMotor(0)));
+    new Trigger(this::IntakeAmpPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(90))));
+                                        
+    new Trigger(this::IntakeGroundPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(210))));
+                                        
+     new Trigger(this::IntakeFeedPose).onTrue(new InstantCommand(()->m_intakePivot.pivotSet(Rotation2d.fromDegrees(2))));
+                                        
     }
     public static DriverControlsSubsystem getInstance()
     {
@@ -183,7 +206,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("TIMER", DriverStation.getMatchTime());
-
+        SmartDashboard.putBoolean("tus", driverController.getRightBumper());
         if(DriverStation.getMatchTime() < 20){
             //setRumble(1);
         }
