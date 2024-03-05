@@ -60,8 +60,7 @@ public class RobotContainer {
   public RobotContainer() 
   {
 
-    cam=CameraServer.startAutomaticCapture(0);
-    cam2=CameraServer.startAutomaticCapture(1);
+    
 
     driveSubsystem= new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve"));
@@ -97,7 +96,7 @@ public class RobotContainer {
 
 
 
-    autoChooser = AutoBuilder.buildAutoChooser("ortadan at ve taksi");
+    autoChooser = AutoBuilder.buildAutoChooser("taksi");
     SmartDashboard.putData("Auto Mode", autoChooser);
   }
 

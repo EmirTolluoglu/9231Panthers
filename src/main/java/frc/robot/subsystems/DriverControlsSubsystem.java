@@ -67,14 +67,14 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return (driverController.getPOV() == 0)|| driverController.getRightStickButton();
     }
 
-    /*Intake pivot 
+    //Intake pivot 
     public boolean IntakePivotPositive(){
         return driverController.getYButton();
     }
     
     public boolean IntakePivotNegative(){
         return driverController.getXButton();
-    }*/
+    }
 
     /*Shooter pivot *//* 
      public boolean ShooterPivotPositive(){
@@ -108,7 +108,7 @@ public class DriverControlsSubsystem extends SubsystemBase{
     }
 
     public boolean IntakeAmpPose(){
-        return driverController.getPOV()==0;
+        return operatorController.getPOV()==0;
     }
 
    // public boolean shooterDownPID()
@@ -118,17 +118,17 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
     public boolean IntakeGroundPose()
     {
-        return driverController.getPOV()==90;
+        return operatorController.getPOV()==90;
     }
 
     public boolean IntakeFeedPose()
     {
-        return driverController.getPOV()==270;
+        return operatorController.getPOV()==270;
     }
 
     public boolean IntakeStartPose()
     {
-        return driverController.getPOV()==180;
+        return operatorController.getPOV()==180;
     }
 
     public void setRumble(double speed){
@@ -150,19 +150,21 @@ public class DriverControlsSubsystem extends SubsystemBase{
 
         swerveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
     // Intake
-   new Trigger(this::IntakeRollerOut).onTrue(new InstantCommand(()->m_intakeRoller.setRollerMotor(Constants.IntakeConstants.AMP_SHOOT_POWER)))
+    new Trigger(this::IntakeRollerOut).onTrue(new InstantCommand(()->m_intakeRoller.setRollerMotor(Constants.IntakeConstants.AMP_SHOOT_POWER)))
                                         .onFalse(new InstantCommand(()->m_intakeRoller.setRollerMotor(0)));
     new Trigger(this::IntakeRollerIn).onTrue(new IntakeRoller(-Constants.IntakeConstants.ROLLER_POWER))
                                         .onFalse(new IntakeRoller(0));
     
-
+    //for angular aiming
+    // new Trigger(this::IntakeRollerOut).onTrue(new InstantCommand(()->swerveSubsystem.driveCommand2(Constants.IntakeConstants.AMP_SHOOT_POWER)))
+    //                                     .onFalse(new InstantCommand(()->swerveSubsystem.driveCommand2());
 
     // Intake
-    //new Trigger(this::IntakePivotPositive).onTrue(new InstantCommand(()->m_intakePivot.setPivotMotor(Constants.IntakeConstants.PIVOT_POWER)))
-    //                                        .onFalse(new InstantCommand(()->m_intakePivot.setPivotMotor(0)));
+    new Trigger(this::IntakePivotPositive).onTrue(new InstantCommand(()->m_intakePivot.setPivotMotor(Constants.IntakeConstants.PIVOT_POWER)))
+                                            .onFalse(new InstantCommand(()->m_intakePivot.setPivotMotor(0)));
 
-    //new Trigger(this::IntakePivotNegative).onTrue(new InstantCommand(()->m_intakePivot.setPivotMotor(-Constants.IntakeConstants.PIVOT_POWER)))
-    //                                        .onFalse(new InstantCommand(()->m_intakePivot.setPivotMotor(0)));
+    new Trigger(this::IntakePivotNegative).onTrue(new InstantCommand(()->m_intakePivot.setPivotMotor(-Constants.IntakeConstants.PIVOT_POWER)))
+                                            .onFalse(new InstantCommand(()->m_intakePivot.setPivotMotor(0)));
 
     // Shooter
     //new Trigger(this::ShooterPivotPositive).onTrue(new ShooterPivot(Constants.ShooterConstant.PIVOT_POWER))

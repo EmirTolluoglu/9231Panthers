@@ -82,7 +82,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
         
         SmartDashboard.putNumber("Limelight_Pose", 1-((LimelightHelpers.getTY("limelight")/400)));
-        if(LimelightHelpers.getTV("limelight"))
+        if(LimelightHelpers.getFiducialID("limelight")==4 ||LimelightHelpers.getFiducialID("limelight")==7)
         {
             SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
             changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
