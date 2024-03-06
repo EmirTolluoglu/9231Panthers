@@ -21,7 +21,7 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     
 
     static ShooterPivotSubsystem instance;
-
+    boolean LimeLİghtFixDegree = false;
     static DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(9);
     public double degreeAim;
     public ShooterPivotSubsystem() {
@@ -72,7 +72,10 @@ public class ShooterPivotSubsystem extends SubsystemBase {
     @Override
     public void periodic()
     {
-        SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
+        SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());        
+        
+        SmartDashboard.putNumber("fiz degree test", degreeAim);
+
         
         double newDegree = SmartDashboard.getNumber("Shooter SetPoint", 1.05);
         newDegree=PantherUtils.clamp(newDegree,0.95,1.05);
@@ -87,8 +90,17 @@ public class ShooterPivotSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Limelight_Pose", 0.97-((LimelightHelpers.getTY("limelight")/400)));
         if(LimelightHelpers.getFiducialID("limelight")==4 ||LimelightHelpers.getFiducialID("limelight")==7 || LimelightHelpers.getFiducialID("limelight")==2)
         {
+            if(!LimeLİghtFixDegree) {
             SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
-            //changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
+            changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
+        }
+        }
+    }
+
+    public void changeLimelightFixDegreeStatus(Boolean cond) {
+        LimeLİghtFixDegree = cond;
+        if (!cond) {
+            changeDegreeAim(1.05);
         }
     }
 

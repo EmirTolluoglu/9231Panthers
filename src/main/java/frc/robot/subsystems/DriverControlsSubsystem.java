@@ -111,6 +111,14 @@ public class DriverControlsSubsystem extends SubsystemBase{
         return operatorController.getPOV()==0;
     }
 
+    public boolean ShooterLimelightFixOpen(){
+        return operatorController.getTriangleButton();
+    }
+
+    public boolean ShooterLimelightFixClose(){
+        return operatorController.getCircleButton();
+    }
+
    // public boolean shooterDownPID()
     //{
     //    return driverController.getPOV()==180;
@@ -171,6 +179,11 @@ public class DriverControlsSubsystem extends SubsystemBase{
     //                                        .onFalse(new ShooterPivot(0));
     //new Trigger(this::ShooterPivotNegative).onTrue(new ShooterPivot(-Constants.ShooterConstant.PIVOT_POWER))
     //                                        .onFalse(new ShooterPivot(0));
+
+    //if limelight makes problem enter fix degree shooter
+    new Trigger(this::ShooterLimelightFixOpen).onTrue(new InstantCommand(()->m_shooterPivot.changeLimelightFixDegreeStatus(true)));
+    new Trigger(this::ShooterLimelightFixClose).onTrue(new InstantCommand(()->m_shooterPivot.changeLimelightFixDegreeStatus(false)));
+
 
     // Shooter
     new Trigger(this::ShooterRoller).onTrue(new ShooterRoller(Constants.ShooterConstant.ROLLER_POWER))
