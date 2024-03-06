@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.781091598499115,
-      "y": 6.7065275433041105
+      "x": 0.7824281474978966,
+      "y": 4.360068478437738
     },
-    "rotation": 59.24309188306326
+    "rotation": -57.72609357831337
   },
   "command": {
     "type": "sequential",
@@ -59,6 +59,12 @@
           "type": "named",
           "data": {
             "name": "intakeRollerStop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "alttan atıs taksi"
           }
         }
       ]
