@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.34,
-      "y": 5.54
+      "x": 0.781091598499115,
+      "y": 6.7065275433041105
     },
-    "rotation": 0
+    "rotation": 59.24309188306326
   },
   "command": {
     "type": "sequential",
@@ -100,19 +100,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "orta taksi"
+                  "pathName": "üstten atıs taksi"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "intakeFeed"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "geri don"
                 }
               }
             ]
