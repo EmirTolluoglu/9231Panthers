@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstant;
 import frc.robot.LimelightHelpers;
+import frc.robot.PantherUtils;
 public class ShooterPivotSubsystem extends SubsystemBase {
     
     private PIDController shooterPID;
@@ -38,7 +39,8 @@ public class ShooterPivotSubsystem extends SubsystemBase {
 
         shooterPID=new PIDController(3,0,0);
         PIDinitialize(1.05);
-        SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
+        SmartDashboard.putNumber("Shooter SetPoint",getAbsoluteDegree());
+        
     }
     private void PIDinitialize(double degree)
     {
@@ -73,19 +75,20 @@ public class ShooterPivotSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Bore",getAbsoluteDegree());
         
         double newDegree = SmartDashboard.getNumber("Shooter SetPoint", 1.05);
+        newDegree=PantherUtils.clamp(newDegree,0.95,1.05);
         if(newDegree != degreeAim)
         {
-           // changeDegreeAim(newDegree);
+            changeDegreeAim(newDegree);
         }
         setPivotMotor(shooterPID.calculate(getAbsoluteDegree()));
 
 
         
-        SmartDashboard.putNumber("Limelight_Pose", 1-((LimelightHelpers.getTY("limelight")/400)));
-        if(LimelightHelpers.getFiducialID("limelight")==4 ||LimelightHelpers.getFiducialID("limelight")==7)
+        SmartDashboard.putNumber("Limelight_Pose", 0.97-((LimelightHelpers.getTY("limelight")/400)));
+        if(LimelightHelpers.getFiducialID("limelight")==4 ||LimelightHelpers.getFiducialID("limelight")==7 || LimelightHelpers.getFiducialID("limelight")==2)
         {
             SmartDashboard.putNumber("LIMLIT", LimelightHelpers.getTY("limelight"));
-            changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
+            //changeDegreeAim(1-((LimelightHelpers.getTY("limelight")/400)));
         }
     }
 
