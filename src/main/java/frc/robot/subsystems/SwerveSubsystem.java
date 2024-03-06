@@ -118,7 +118,7 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Joystick", angularRotationX.getAsDouble());
       swerveDrive.drive(new Translation2d(-translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
                                           -translationY.getAsDouble() * swerveDrive.getMaximumVelocity()),
-                        angularRotationX.getAsDouble() * swerveDrive.getMaximumAngularVelocity(),
+                        -angularRotationX.getAsDouble() * swerveDrive.getMaximumAngularVelocity(),
                         true,
                         false);
     });
